@@ -22,6 +22,7 @@ if __name__ == '__main__':
         zip_file.extractall(data_path)
 
     filename = 'SUNRGBDtoolbox.zip'
+    filename = os.path.join(data_path, filename)
     print('Extracting {}...'.format(filename))
     with zipfile.ZipFile(filename, 'r') as zip_file:
         zip_file.extractall(data_path)

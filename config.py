@@ -1,4 +1,9 @@
 import hdf5storage
+import numpy as np
+import random
+import cv2 as cv
+import json
+import os
 
 img_rows, img_cols = 320, 320
 channel = 3
@@ -67,5 +72,27 @@ objectColors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a'
                 '#ce6dbd', '#a55194', '#7b4173', '#000000', '#0000FF']
 colors = [[int(c[1:3], 16), int(c[3:5], 16), int(c[5:7], 16)] for c in objectColors]
 
+folder_2D_segmentation = 'annotation2Dfinal'
+folder_rgb_image = 'image'
+
+
 if __name__ == '__main__':
-    pass
+    filename = '{}_names.txt'.format('train')
+    with open(filename, 'r') as f:
+        names = f.read().splitlines()
+
+    item = random.choice(names)
+
+    image_path = os.path.join('data', item)
+    image_path = os.path.join(image_path, folder_rgb_image)
+    image_name = [f for f in os.listdir(image_path) if f.endswith('.jpg')][0]
+    image_path = os.path.join(image_path, image_name)
+    image = cv.imread(image_path)
+
+    seg_path = os.path.join('data', item)
+    seg_path = os.path.join(seg_path, folder_2D_segmentation)
+    seg_path = os.path.join(seg_path, 'index.json')
+    with open(seg_path, 'r') as f:
+        seg = json.load(f)
+
+    print(seg)

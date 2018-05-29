@@ -29,6 +29,9 @@ def get_semantic(name, image_size):
             object_names.append(obj['name'])
         except TypeError as err:
             print('name: ' + str(name))
+            print('seg_path: ' + str(seg_path))
+            print('seg: ' + str(seg))
+            print('image_size: ' + str(image_size))
             print('obj: ' + str(obj))
             print(err)
             raise

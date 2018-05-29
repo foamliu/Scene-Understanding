@@ -82,6 +82,7 @@ if __name__ == '__main__':
         names = f.read().splitlines()
 
     item = random.choice(names)
+    print(item)
 
     image_path = os.path.join('data', item)
     image_path = os.path.join(image_path, folder_rgb_image)

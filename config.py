@@ -126,7 +126,7 @@ if __name__ == '__main__':
                 x = poly['x'][i]
                 y = poly['y'][i]
                 pts.append([x, y])
-            cv.fillPoly(mask, [np.array(pts, np.int32)], object_color)
+            cv.fillPoly(mask, np.array([pts], dtype=np.int32), object_color)
 
     cv.imwrite('sample.png', mask)
 

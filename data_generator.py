@@ -133,6 +133,7 @@ class DataGenSequence(Sequence):
             try:
                 semantic = get_semantic(name, image_size)
             except json.decoder.JSONDecodeError:
+                i += 1
                 continue
 
             different_sizes = [(320, 320), (480, 480), (640, 640)]

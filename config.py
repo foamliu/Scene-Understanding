@@ -88,6 +88,7 @@ if __name__ == '__main__':
     image_name = [f for f in os.listdir(image_path) if f.endswith('.jpg')][0]
     image_path = os.path.join(image_path, image_name)
     image = cv.imread(image_path)
+    h, w = image.shape[:2]
 
     seg_path = os.path.join('data', item)
     seg_path = os.path.join(seg_path, folder_2D_segmentation)
@@ -95,6 +96,24 @@ if __name__ == '__main__':
     with open(seg_path, 'r') as f:
         seg = json.load(f)
 
-    print(seg['frames'])
-    print(seg['frames'][0]['polygon'])
-    print(len(seg['frames'][0]['polygon']))
+    # print(seg['frames'])
+    # print(seg['frames'][0]['polygon'])
+    # print(len(seg['frames'][0]['polygon']))
+
+    mask = np.zeros((h, w, 3), np.uint8)
+
+    for poly in seg['frames'][0]['polygon']:
+        object_id = poly['object']
+        pts = []
+        for i in range(len(poly['x'])):
+            x = poly['x'][i]
+            y = poly['y'][i]
+            pts.append([x, y])
+        cv.fillPoly(mask, np.array(pts, np.int32), colors[i])
+
+    cv.imwrite('sample.png', mask)
+
+
+
+
+

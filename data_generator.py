@@ -67,9 +67,10 @@ def get_semantic(name, image_size):
 
 
 def to_bgr(y_pred):
-    ret = np.zeros((img_rows, img_cols, 3), np.float32)
-    for r in range(320):
-        for c in range(320):
+    h, w = y_pred.shape[:2]
+    ret = np.zeros((h, w, 3), np.float32)
+    for r in range(h):
+        for c in range(w):
             color_id = y_pred[r, c]
             # print("color_id: " + str(color_id))
             ret[r, c, :] = colors[color_id]

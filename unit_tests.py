@@ -13,6 +13,7 @@ class TestStringMethods(unittest.TestCase):
     def test_get_semantic(self):
         name = 'SUNRGBD/kv2/kinect2data/003489_2014-05-21_15-49-49_094959634447_rgbf000101-resize'
         image, image_size = get_image(name)
+        print('image_size: ' + str(image_size))
         semantic = get_semantic(name, image_size)
         semantic = to_bgr(semantic)
         cv.imwrite('temp/test_get_semantic_image.png', image)

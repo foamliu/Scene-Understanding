@@ -110,6 +110,7 @@ if __name__ == '__main__':
 
     object_names = []
     for obj in seg['objects']:
+        print('obj: ' + str(obj))
         object_names.append(obj['name'])
 
     for poly in seg['frames'][0]['polygon']:

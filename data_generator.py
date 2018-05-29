@@ -5,32 +5,41 @@ import hdf5storage
 import cv2 as cv
 import numpy as np
 from keras.utils import Sequence
-
-from config import batch_size
-from config import colors
-from config import img_cols
-from config import img_rows
-from config import num_classes
-
-metadata_folder = 'data/SUNRGBDtoolbox/Metadata/'
+import json
+from config import img_rows, img_cols, batch_size, colors, num_classes
+from config import folder_metadata, folder_rgb_image, folder_2D_segmentation
+from config import seg37_dict
 
 
-def get_semantic(name):
-    tokens = name.split('_')
-    tokens[-1] = 'semantic_pretty.png'
-    name = '_'.join(tokens)
-    filename = os.path.join(semantic_folder, name)
-    semantic = cv.imread(filename)
+def get_semantic(name, image_size):
+    seg_path = os.path.join('data', name)
+    seg_path = os.path.join(seg_path, folder_2D_segmentation)
+    seg_path = os.path.join(seg_path, 'index.json')
+    with open(seg_path, 'r') as f:
+        seg = json.load(f)
+
+    h, w = image_size
+    semantic = np.zeros((h, w, 1), np.uint8)
+
+    object_names = []
+    for obj in seg['objects']:
+        # print('obj: ' + str(obj))
+        object_names.append(obj['name'])
+
+    for poly in seg['frames'][0]['polygon']:
+        object_id = poly['object']
+        object_name = object_names[object_id]
+        if object_name in seg37_dict.keys():
+            class_id = (seg37_dict[object_name])
+            pts = []
+            for i in range(len(poly['x'])):
+                x = poly['x'][i]
+                y = poly['y'][i]
+                pts.append([x, y])
+            cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
+
+    semantic = np.reshape(semantic, (h, w))
     return semantic
-
-
-def get_y(semantic):
-    temp = np.zeros(shape=(320, 320, num_classes), dtype=np.int32)
-    semantic = np.array(semantic).astype(np.int32)
-    for i in range(num_classes):
-        temp[:, :, i] = np.sum(np.abs(semantic - colors[i]), axis=2)
-    y = np.argmin(temp, axis=2)
-    return y
 
 
 def to_bgr(y_pred):
@@ -88,13 +97,16 @@ class DataGenSequence(Sequence):
 
         for i_batch in range(length):
             name = self.names[i]
-            filename = os.path.join(train_folder, name)
-            image = cv.imread(filename)
+            image_path = os.path.join('data', name)
+            image_path = os.path.join(image_path, folder_rgb_image)
+            image_name = [f for f in os.listdir(image_path) if f.endswith('.jpg')][0]
+            image_path = os.path.join(image_path, image_name)
+            image = cv.imread(image_path)
             image_size = image.shape[:2]
-            semantic = get_semantic(name)
 
-            different_sizes = [(320, 320), (480, 480), (480, 480), (480, 480), (640, 640), (640, 640), (640, 640),
-                               (960, 960), (960, 960), (960, 960)]
+            semantic = get_semantic(name, image_size)
+
+            different_sizes = [(320, 320), (480, 480), (640, 640)]
             crop_size = random.choice(different_sizes)
 
             x, y = random_choice(image_size, crop_size)
@@ -106,7 +118,7 @@ class DataGenSequence(Sequence):
                 semantic = np.fliplr(semantic)
 
             x = image / 255.
-            y = get_y(semantic)
+            y = semantic
 
             batch_x[i_batch, :, :, 0:3] = x
             batch_y[i_batch, :, :] = y
@@ -128,7 +140,7 @@ def valid_gen():
 
 
 def split_data():
-    filename = os.path.join(metadata_folder, 'SUNRGBDMeta.mat')
+    filename = os.path.join(folder_metadata, 'SUNRGBDMeta.mat')
     meta = hdf5storage.loadmat(filename)
     names = []
     for item in meta['SUNRGBDMeta'][0]:

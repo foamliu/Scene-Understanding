@@ -16,9 +16,9 @@ num_train_samples = 8268
 num_valid_samples = 2067
 unknown = 128
 
-num_classes = 37
+num_classes = 38
 
-seg37list = []
+seg37list = ['others']
 for item in hdf5storage.loadmat('seg37list.mat')['seg37list'][0]:
     seg37list.append(item[0])
 # print(seg37list)
@@ -77,6 +77,7 @@ objectColors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a'
                 '#ce6dbd', '#a55194', '#7b4173', '#000000', '#0000FF']
 colors = [[int(c[1:3], 16), int(c[3:5], 16), int(c[5:7], 16)] for c in objectColors]
 
+folder_metadata = 'data/SUNRGBDtoolbox/Metadata/'
 folder_2D_segmentation = 'annotation2Dfinal'
 folder_rgb_image = 'image'
 
@@ -110,7 +111,7 @@ if __name__ == '__main__':
 
     object_names = []
     for obj in seg['objects']:
-        print('obj: ' + str(obj))
+        # print('obj: ' + str(obj))
         object_names.append(obj['name'])
 
     for poly in seg['frames'][0]['polygon']:

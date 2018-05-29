@@ -60,6 +60,11 @@ for item in hdf5storage.loadmat('seg37list.mat')['seg37list'][0]:
 #  'bathtub',
 #  'bag']
 
+seg37_dict = dict()
+for i in range(len(seg37list)):
+    seg37_dict[seg37list[i]] = i
+
+
 objectColors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd',
                 '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d',
                 '#17becf', '#9edae5', '#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3', '#fdb462', '#b3de69',
@@ -103,14 +108,20 @@ if __name__ == '__main__':
 
     mask = np.zeros((h, w, 3), np.uint8)
 
+    object_names = []
+    for obj in seg['objects']:
+        object_names.append(obj['name'])
+
     for poly in seg['frames'][0]['polygon']:
         object_id = poly['object']
+        object_name = object_names[object_id]
+        object_color = colors[seg37_dict[object_name]]
         pts = []
         for i in range(len(poly['x'])):
             x = poly['x'][i]
             y = poly['y'][i]
             pts.append([x, y])
-        cv.fillPoly(mask, [np.array(pts, np.int32)], colors[i])
+        cv.fillPoly(mask, [np.array(pts, np.int32)], object_color)
 
     cv.imwrite('sample.png', mask)
 

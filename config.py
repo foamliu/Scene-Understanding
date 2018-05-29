@@ -8,7 +8,7 @@ import numpy as np
 
 img_rows, img_cols = 320, 320
 channel = 3
-batch_size = 60
+batch_size = 48
 epochs = 1000
 patience = 50
 # num_samples = 10335

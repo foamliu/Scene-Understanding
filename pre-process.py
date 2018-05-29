@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import argparse
 import os
-import shutil
 import zipfile
 
 # python pre-process.py -d ../../data/Semantic-Segmentation/data/
@@ -26,4 +25,3 @@ if __name__ == '__main__':
     print('Extracting {}...'.format(filename))
     with zipfile.ZipFile(filename, 'r') as zip_file:
         zip_file.extractall(data_path)
-

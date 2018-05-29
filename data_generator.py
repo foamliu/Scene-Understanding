@@ -57,12 +57,12 @@ def get_semantic(name, image_size):
     return semantic
 
 
-def to_bgr(y_pred):
-    h, w = y_pred.shape[:2]
+def to_bgr(semantic):
+    h, w = semantic.shape[:2]
     ret = np.zeros((h, w, 3), np.float32)
     for r in range(h):
         for c in range(w):
-            color_id = y_pred[r, c]
+            color_id = semantic[r, c]
             # print("color_id: " + str(color_id))
             ret[r, c, :] = colors[color_id]
     ret = ret.astype(np.uint8)
@@ -87,7 +87,7 @@ def safe_crop(mat, x, y, crop_size):
     h, w = crop.shape[:2]
     ret[0:h, 0:w] = crop
     if crop_size != (320, 320):
-        ret = cv.resize(ret, dsize=(img_rows, img_cols), interpolation=cv.INTER_CUBIC)
+        ret = cv.resize(ret, dsize=(img_rows, img_cols), interpolation=cv.INTER_NEAREST)
     return ret
 
 

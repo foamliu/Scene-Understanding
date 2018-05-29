@@ -21,51 +21,51 @@ def get_semantic(name, image_size):
     h, w = image_size
     semantic = np.zeros((h, w, 1), np.int32)
 
-    try:
-        with open(seg_path, 'r') as f:
-            seg = json.load(f)
-    except json.decoder.JSONDecodeError as err:
-        print('name: ' + str(name))
-        print(err)
-        semantic = np.reshape(semantic, (h, w))
-        return semantic
-
-    object_names = []
-    for obj in seg['objects']:
-        try:
-            if not obj:
-                object_names.append(None)
-            else:
-                object_names.append(obj['name'])
-        except TypeError as err:
-            print('name: ' + str(name))
-            print('seg_path: ' + str(seg_path))
-            print('seg: ' + str(seg))
-            print('image_size: ' + str(image_size))
-            print('obj: ' + str(obj))
-            print(err)
-            raise
-
-    for poly in seg['frames'][0]['polygon']:
-        object_id = poly['object']
-        if object_id < len(object_names):
-            object_name = object_names[object_id]
-            if object_name in seg37_dict.keys():
-                class_id = (seg37_dict[object_name])
-                pts = []
-                if isinstance(poly['x'], list):
-                    for i in range(len(poly['x'])):
-                        x = poly['x'][i]
-                        y = poly['y'][i]
-                        pts.append([x, y])
-                    if len(pts) > 0:
-                        try:
-                            cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
-                        except cv.error as err:
-                            print('name: ' + str(name))
-                            print('pts: ' + str(pts))
-                            print(err)
-                            raise
+    # try:
+    #     with open(seg_path, 'r') as f:
+    #         seg = json.load(f)
+    # except json.decoder.JSONDecodeError as err:
+    #     print('name: ' + str(name))
+    #     print(err)
+    #     semantic = np.reshape(semantic, (h, w))
+    #     return semantic
+    #
+    # object_names = []
+    # for obj in seg['objects']:
+    #     try:
+    #         if not obj:
+    #             object_names.append(None)
+    #         else:
+    #             object_names.append(obj['name'])
+    #     except TypeError as err:
+    #         print('name: ' + str(name))
+    #         print('seg_path: ' + str(seg_path))
+    #         print('seg: ' + str(seg))
+    #         print('image_size: ' + str(image_size))
+    #         print('obj: ' + str(obj))
+    #         print(err)
+    #         raise
+    #
+    # for poly in seg['frames'][0]['polygon']:
+    #     object_id = poly['object']
+    #     if object_id < len(object_names):
+    #         object_name = object_names[object_id]
+    #         if object_name in seg37_dict.keys():
+    #             class_id = (seg37_dict[object_name])
+    #             pts = []
+    #             if isinstance(poly['x'], list):
+    #                 for i in range(len(poly['x'])):
+    #                     x = poly['x'][i]
+    #                     y = poly['y'][i]
+    #                     pts.append([x, y])
+    #                 if len(pts) > 0:
+    #                     try:
+    #                         cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
+    #                     except cv.error as err:
+    #                         print('name: ' + str(name))
+    #                         print('pts: ' + str(pts))
+    #                         print(err)
+    #                         raise
 
     semantic = np.reshape(semantic, (h, w))
     return semantic

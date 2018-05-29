@@ -86,8 +86,9 @@ def safe_crop(mat, x, y, crop_size):
     crop = mat[y:y + crop_height, x:x + crop_width]
     h, w = crop.shape[:2]
     ret[0:h, 0:w] = crop
-    if crop_size != (320, 320):
+    if crop_size != (img_rows, img_cols):
         ret = cv.resize(ret, dsize=(img_rows, img_cols), interpolation=cv.INTER_NEAREST)
+    ret = ret.astype(np.uint8)
     return ret
 
 

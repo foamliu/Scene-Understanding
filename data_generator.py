@@ -41,22 +41,23 @@ def get_semantic(name, image_size):
 
     for poly in seg['frames'][0]['polygon']:
         object_id = poly['object']
-        object_name = object_names[object_id]
-        if object_name in seg37_dict.keys():
-            class_id = (seg37_dict[object_name])
-            pts = []
-            for i in range(len(poly['x'])):
-                x = poly['x'][i]
-                y = poly['y'][i]
-                pts.append([x, y])
-            if len(pts) > 0:
-                try:
-                    cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
-                except cv.error as err:
-                    print('name: ' + str(name))
-                    print('pts: ' + str(pts))
-                    print(err)
-                    raise
+        if object_id < len(object_names):
+            object_name = object_names[object_id]
+            if object_name in seg37_dict.keys():
+                class_id = (seg37_dict[object_name])
+                pts = []
+                for i in range(len(poly['x'])):
+                    x = poly['x'][i]
+                    y = poly['y'][i]
+                    pts.append([x, y])
+                if len(pts) > 0:
+                    try:
+                        cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
+                    except cv.error as err:
+                        print('name: ' + str(name))
+                        print('pts: ' + str(pts))
+                        print(err)
+                        raise
 
     semantic = np.reshape(semantic, (h, w))
     return semantic

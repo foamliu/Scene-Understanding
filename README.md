@@ -28,7 +28,7 @@ Download [VGG16](https://github.com/fchollet/deep-learning-models/releases/downl
 
 ## Usage
 ### Data Pre-processing
-Extract training images:
+The dataset contains 10335 RGBD images of SUNRGBD V1, extract training images:
 ```bash
 $ python pre-process.py
 ```

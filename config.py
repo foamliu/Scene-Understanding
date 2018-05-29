@@ -116,13 +116,15 @@ if __name__ == '__main__':
     for poly in seg['frames'][0]['polygon']:
         object_id = poly['object']
         object_name = object_names[object_id]
-        object_color = colors[seg37_dict[object_name]]
-        pts = []
-        for i in range(len(poly['x'])):
-            x = poly['x'][i]
-            y = poly['y'][i]
-            pts.append([x, y])
-        cv.fillPoly(mask, [np.array(pts, np.int32)], object_color)
+        if object_name in seg37_dict.keys():
+            object_color = colors[seg37_dict[object_name]]
+
+            pts = []
+            for i in range(len(poly['x'])):
+                x = poly['x'][i]
+                y = poly['y'][i]
+                pts.append([x, y])
+            cv.fillPoly(mask, [np.array(pts, np.int32)], object_color)
 
     cv.imwrite('sample.png', mask)
 

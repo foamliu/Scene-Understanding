@@ -160,8 +160,8 @@ def is_valid(name):
             object_id = poly['object']
             if object_id != len(object_names):
                 return False
-            if not isinstance(poly['x'], list) or not isinstance(poly['y'], list):
-                return False
+            # if not isinstance(poly['x'], list) or not isinstance(poly['y'], list):
+            #     return False
             object_name = object_names[object_id]
             if object_name in seg38_dict.keys():
                 # class_id = seg38_dict[object_name]

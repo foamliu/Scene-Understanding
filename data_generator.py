@@ -26,7 +26,10 @@ def get_semantic(name, image_size):
     object_names = []
     for obj in seg['objects']:
         try:
-            object_names.append(obj['name'])
+            if not obj:
+                object_names.append(None)
+            else:
+                object_names.append(obj['name'])
         except TypeError as err:
             print('name: ' + str(name))
             print('seg_path: ' + str(seg_path))

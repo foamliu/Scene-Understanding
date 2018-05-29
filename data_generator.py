@@ -17,8 +17,13 @@ def get_semantic(name, image_size):
     seg_path = os.path.join('data', name)
     seg_path = os.path.join(seg_path, folder_2D_segmentation)
     seg_path = os.path.join(seg_path, 'index.json')
-    with open(seg_path, 'r') as f:
-        seg = json.load(f)
+    try:
+        with open(seg_path, 'r') as f:
+            seg = json.load(f)
+    except json.decoder.JSONDecodeError as err:
+        print('name: ' + str(name))
+        print(err)
+        raise
 
     h, w = image_size
     semantic = np.zeros((h, w, 1), np.uint8)
@@ -125,7 +130,10 @@ class DataGenSequence(Sequence):
             image = cv.imread(image_path)
             image_size = image.shape[:2]
 
-            semantic = get_semantic(name, image_size)
+            try:
+                semantic = get_semantic(name, image_size)
+            except json.decoder.JSONDecodeError:
+                continue
 
             different_sizes = [(320, 320), (480, 480), (640, 640)]
             crop_size = random.choice(different_sizes)

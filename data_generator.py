@@ -1,7 +1,7 @@
 import os
 import random
 from random import shuffle
-
+import hdf5storage
 import cv2 as cv
 import numpy as np
 from keras.utils import Sequence
@@ -12,9 +12,7 @@ from config import img_cols
 from config import img_rows
 from config import num_classes
 
-train_folder = 'data/rgb'
-depth_folder = 'data/depth'
-semantic_folder = 'data/semantic'
+metadata_folder = 'data/SUNRGBDtoolbox/Metadata/'
 
 
 def get_semantic(name):
@@ -130,9 +128,13 @@ def valid_gen():
 
 
 def split_data():
-    train_folder = 'data/rgb'
-    names = [f for f in os.listdir(train_folder) if f.endswith('.png')]
-    num_samples = len(names)  # 52903
+    filename = os.path.join(metadata_folder, 'SUNRGBDMeta.mat')
+    meta = hdf5storage.loadmat(filename)
+    names = []
+    for item in meta['SUNRGBDMeta'][0]:
+        names.append(item[0][0])
+
+    num_samples = len(names)  # 10335
     print('num_samples: ' + str(num_samples))
 
     num_train_samples = int(num_samples * 0.8)

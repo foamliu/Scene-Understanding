@@ -49,7 +49,14 @@ def get_semantic(name, image_size):
                 x = poly['x'][i]
                 y = poly['y'][i]
                 pts.append([x, y])
-            cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
+            if len(pts) > 0:
+                try:
+                    cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
+                except cv.error as err:
+                    print('name: ' + str(name))
+                    print('pts: ' + str(pts))
+                    print(err)
+                    raise
 
     semantic = np.reshape(semantic, (h, w))
     return semantic

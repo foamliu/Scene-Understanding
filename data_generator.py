@@ -2,7 +2,6 @@ import json
 import os
 import random
 from random import shuffle
-
 import cv2 as cv
 import hdf5storage
 import numpy as np
@@ -26,7 +25,7 @@ def get_semantic(name, image_size):
         raise
 
     h, w = image_size
-    semantic = np.zeros((h, w, 1), np.uint8)
+    semantic = np.zeros((h, w, 1), np.int32)
 
     object_names = []
     for obj in seg['objects']:
@@ -51,18 +50,19 @@ def get_semantic(name, image_size):
             if object_name in seg37_dict.keys():
                 class_id = (seg37_dict[object_name])
                 pts = []
-                for i in range(len(poly['x'])):
-                    x = poly['x'][i]
-                    y = poly['y'][i]
-                    pts.append([x, y])
-                if len(pts) > 0:
-                    try:
-                        cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
-                    except cv.error as err:
-                        print('name: ' + str(name))
-                        print('pts: ' + str(pts))
-                        print(err)
-                        raise
+                if isinstance(poly['x'], list):
+                    for i in range(len(poly['x'])):
+                        x = poly['x'][i]
+                        y = poly['y'][i]
+                        pts.append([x, y])
+                    if len(pts) > 0:
+                        try:
+                            cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
+                        except cv.error as err:
+                            print('name: ' + str(name))
+                            print('pts: ' + str(pts))
+                            print(err)
+                            raise
 
     semantic = np.reshape(semantic, (h, w))
     return semantic

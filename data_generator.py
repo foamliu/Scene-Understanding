@@ -10,7 +10,7 @@ from keras.utils import Sequence
 
 from config import folder_metadata, folder_rgb_image, folder_2D_segmentation
 from config import img_rows, img_cols, batch_size, colors
-from config import seg37_dict
+from config import seg38_dict
 
 
 def get_semantic(name, image_size):
@@ -160,6 +160,19 @@ class DataGenSequence(Sequence):
         np.random.shuffle(self.names)
 
 
+def is_valid(name):
+    seg_path = os.path.join('data', name)
+    seg_path = os.path.join(seg_path, folder_2D_segmentation)
+    seg_path = os.path.join(seg_path, 'index.json')
+    try:
+        with open(seg_path, 'r') as f:
+            json.load(f)
+    except json.decoder.JSONDecodeError:
+        return False
+
+    return True
+
+
 def train_gen():
     return DataGenSequence('train')
 
@@ -173,7 +186,9 @@ def split_data():
     meta = hdf5storage.loadmat(filename)
     names = []
     for item in meta['SUNRGBDMeta'][0]:
-        names.append(item[0][0])
+        name = item[0][0]
+        if is_valid(name):
+            names.append(item[0][0])
 
     num_samples = len(names)  # 10335
     print('num_samples: ' + str(num_samples))

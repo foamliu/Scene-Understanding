@@ -7,20 +7,19 @@ import os
 
 img_rows, img_cols = 320, 320
 channel = 3
-batch_size = 30
+batch_size = 28
 epochs = 1000
 patience = 50
 num_samples = 10335
 num_train_samples = 8268
 # num_samples - num_train_samples
 num_valid_samples = 2067
-unknown = 128
 
 num_classes = 38
 
-seg37list = ['others']
+seg38list = ['others']
 for item in hdf5storage.loadmat('seg37list.mat')['seg37list'][0]:
-    seg37list.append(item[0])
+    seg38list.append(item[0])
 # print(seg37list)
 # ['wall',
 #  'floor',
@@ -60,9 +59,9 @@ for item in hdf5storage.loadmat('seg37list.mat')['seg37list'][0]:
 #  'bathtub',
 #  'bag']
 
-seg37_dict = dict()
-for i in range(len(seg37list)):
-    seg37_dict[seg37list[i]] = i
+seg38_dict = dict()
+for i in range(len(seg38list)):
+    seg38_dict[seg38list[i]] = i
 
 
 objectColors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd',
@@ -117,8 +116,8 @@ if __name__ == '__main__':
     for poly in seg['frames'][0]['polygon']:
         object_id = poly['object']
         object_name = object_names[object_id]
-        if object_name in seg37_dict.keys():
-            object_color = colors[seg37_dict[object_name]]
+        if object_name in seg38_dict.keys():
+            object_color = colors[seg38_dict[object_name]]
 
             pts = []
             for i in range(len(poly['x'])):

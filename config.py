@@ -95,4 +95,5 @@ if __name__ == '__main__':
     with open(seg_path, 'r') as f:
         seg = json.load(f)
 
-    print(seg)
+    print(seg['frames']['polygon'])
+    print(len(seg['frames']['polygon']))

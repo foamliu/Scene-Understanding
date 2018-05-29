@@ -10,11 +10,13 @@ channel = 3
 batch_size = 28
 epochs = 1000
 patience = 50
-num_samples = 10335
-num_train_samples = 8268
+# num_samples = 10335
+num_samples = 10295
+# num_train_samples = 8268
+num_train_samples = 8236
 # num_samples - num_train_samples
-num_valid_samples = 2067
-
+# num_valid_samples = 2067
+num_valid_samples = 2059
 num_classes = 38
 
 seg38list = ['others']

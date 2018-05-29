@@ -13,6 +13,16 @@ from config import img_rows, img_cols, batch_size, colors
 from config import seg38_dict
 
 
+def get_image(name):
+    image_path = os.path.join('data', name)
+    image_path = os.path.join(image_path, folder_rgb_image)
+    image_name = [f for f in os.listdir(image_path) if f.endswith('.jpg')][0]
+    image_path = os.path.join(image_path, image_name)
+    image = cv.imread(image_path)
+    image_size = image.shape[:2]
+    return image, image_size
+
+
 def get_semantic(name, image_size):
     seg_path = os.path.join('data', name)
     seg_path = os.path.join(seg_path, folder_2D_segmentation)
@@ -21,51 +31,36 @@ def get_semantic(name, image_size):
     h, w = image_size
     semantic = np.zeros((h, w, 1), np.int32)
 
-    # try:
-    #     with open(seg_path, 'r') as f:
-    #         seg = json.load(f)
-    # except json.decoder.JSONDecodeError as err:
-    #     print('name: ' + str(name))
-    #     print(err)
-    #     semantic = np.reshape(semantic, (h, w))
-    #     return semantic
-    #
-    # object_names = []
-    # for obj in seg['objects']:
-    #     try:
-    #         if not obj:
-    #             object_names.append(None)
-    #         else:
-    #             object_names.append(obj['name'])
-    #     except TypeError as err:
-    #         print('name: ' + str(name))
-    #         print('seg_path: ' + str(seg_path))
-    #         print('seg: ' + str(seg))
-    #         print('image_size: ' + str(image_size))
-    #         print('obj: ' + str(obj))
-    #         print(err)
-    #         raise
-    #
-    # for poly in seg['frames'][0]['polygon']:
-    #     object_id = poly['object']
-    #     if object_id < len(object_names):
-    #         object_name = object_names[object_id]
-    #         if object_name in seg37_dict.keys():
-    #             class_id = (seg37_dict[object_name])
-    #             pts = []
-    #             if isinstance(poly['x'], list):
-    #                 for i in range(len(poly['x'])):
-    #                     x = poly['x'][i]
-    #                     y = poly['y'][i]
-    #                     pts.append([x, y])
-    #                 if len(pts) > 0:
-    #                     try:
-    #                         cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
-    #                     except cv.error as err:
-    #                         print('name: ' + str(name))
-    #                         print('pts: ' + str(pts))
-    #                         print(err)
-    #                         raise
+    with open(seg_path, 'r') as f:
+        seg = json.load(f)
+
+    object_names = []
+    for obj in seg['objects']:
+        if not obj:
+            object_names.append(None)
+        else:
+            object_names.append(obj['name'])
+
+    for poly in seg['frames'][0]['polygon']:
+        object_id = poly['object']
+        if object_id < len(object_names):
+            object_name = object_names[object_id]
+            if object_name in seg38_dict.keys():
+                class_id = (seg38_dict[object_name])
+                pts = []
+                if isinstance(poly['x'], list):
+                    for i in range(len(poly['x'])):
+                        x = poly['x'][i]
+                        y = poly['y'][i]
+                        pts.append([x, y])
+                    if len(pts) > 0:
+                        try:
+                            cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
+                        except cv.error as err:
+                            print('name: ' + str(name))
+                            print('pts: ' + str(pts))
+                            print(err)
+                            raise
 
     semantic = np.reshape(semantic, (h, w))
     return semantic
@@ -126,13 +121,7 @@ class DataGenSequence(Sequence):
 
         for i_batch in range(length):
             name = self.names[i]
-            image_path = os.path.join('data', name)
-            image_path = os.path.join(image_path, folder_rgb_image)
-            image_name = [f for f in os.listdir(image_path) if f.endswith('.jpg')][0]
-            image_path = os.path.join(image_path, image_name)
-            image = cv.imread(image_path)
-            image_size = image.shape[:2]
-
+            image, image_size = get_image(name)
             semantic = get_semantic(name, image_size)
 
             different_sizes = [(320, 320), (480, 480), (640, 640)]

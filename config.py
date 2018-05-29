@@ -75,7 +75,7 @@ objectColors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a'
                 '#723e77', '#7d807f', '#9c9ede', '#7375b5', '#4a5584', '#cedb9c', '#b5cf6b', '#8ca252', '#637939',
                 '#e7cb94', '#e7ba52', '#bd9e39', '#8c6d31', '#e7969c', '#d6616b', '#ad494a', '#843c39', '#de9ed6',
                 '#ce6dbd', '#a55194', '#7b4173', '#000000', '#0000FF']
-colors = [[int(c[1:3], 16), int(c[3:5], 16), int(c[5:7], 16)] for c in objectColors]
+colors = [[int(c[5:7], 16), int(c[3:5], 16), int(c[1:3], 16)] for c in objectColors]
 
 folder_2D_segmentation = 'annotation2Dfinal'
 folder_rgb_image = 'image'

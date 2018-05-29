@@ -112,14 +112,17 @@ if __name__ == '__main__':
 
     object_names = []
     for obj in seg['objects']:
-        # print('obj: ' + str(obj))
-        object_names.append(obj['name'])
+        if not obj:
+            object_names.append(None)
+        else:
+            object_names.append(obj['name'])
 
     for poly in seg['frames'][0]['polygon']:
         object_id = poly['object']
         object_name = object_names[object_id]
         if object_name in seg38_dict.keys():
-            object_color = colors[seg38_dict[object_name]]
+            class_id = seg38_dict[object_name]
+            object_color = colors[class_id]
 
             pts = []
             for i in range(len(poly['x'])):

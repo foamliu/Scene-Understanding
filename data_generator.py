@@ -43,24 +43,15 @@ def get_semantic(name, image_size):
 
     for poly in seg['frames'][0]['polygon']:
         object_id = poly['object']
-        if object_id < len(object_names):
-            object_name = object_names[object_id]
-            if object_name in seg38_dict.keys():
-                class_id = (seg38_dict[object_name])
-                pts = []
-                if isinstance(poly['x'], list):
-                    for i in range(len(poly['x'])):
-                        x = poly['x'][i]
-                        y = poly['y'][i]
-                        pts.append([x, y])
-                    if len(pts) > 0:
-                        try:
-                            cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
-                        except cv.error as err:
-                            print('name: ' + str(name))
-                            print('pts: ' + str(pts))
-                            print(err)
-                            raise
+        object_name = object_names[object_id]
+        if object_name in seg38_dict.keys():
+            class_id = (seg38_dict[object_name])
+            pts = []
+            for i in range(len(poly['x'])):
+                x = poly['x'][i]
+                y = poly['y'][i]
+                pts.append([x, y])
+                cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
 
     semantic = np.reshape(semantic, (h, w))
     return semantic
@@ -156,7 +147,32 @@ def is_valid(name):
     seg_path = os.path.join(seg_path, 'index.json')
     try:
         with open(seg_path, 'r') as f:
-            json.load(f)
+            seg = json.load(f)
+
+        object_names = []
+        for obj in seg['objects']:
+            if not obj:
+                object_names.append(None)
+            else:
+                object_names.append(obj['name'])
+
+        for poly in seg['frames'][0]['polygon']:
+            object_id = poly['object']
+            if object_id != len(object_names):
+                return False
+            if not isinstance(poly['x'], list) or not isinstance(poly['y'], list):
+                return False
+            object_name = object_names[object_id]
+            if object_name in seg38_dict.keys():
+                # class_id = seg38_dict[object_name]
+                pts = []
+                for i in range(len(poly['x'])):
+                    x = poly['x'][i]
+                    y = poly['y'][i]
+                    pts.append([x, y])
+                if len(pts) < 3:
+                    return False
+
     except json.decoder.JSONDecodeError:
         return False
 

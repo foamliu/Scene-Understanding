@@ -27,6 +27,7 @@ def get_semantic(name, image_size):
     except json.decoder.JSONDecodeError as err:
         print('name: ' + str(name))
         print(err)
+        semantic = np.reshape(semantic, (h, w))
         return semantic
 
     object_names = []

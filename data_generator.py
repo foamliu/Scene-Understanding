@@ -1,13 +1,15 @@
+import json
 import os
 import random
 from random import shuffle
-import hdf5storage
+
 import cv2 as cv
+import hdf5storage
 import numpy as np
 from keras.utils import Sequence
-import json
-from config import img_rows, img_cols, batch_size, colors, num_classes
+
 from config import folder_metadata, folder_rgb_image, folder_2D_segmentation
+from config import img_rows, img_cols, batch_size, colors
 from config import seg37_dict
 
 
@@ -23,8 +25,12 @@ def get_semantic(name, image_size):
 
     object_names = []
     for obj in seg['objects']:
-        # print('obj: ' + str(obj))
-        object_names.append(obj['name'])
+        try:
+            object_names.append(obj['name'])
+        except TypeError as err:
+            print('obj: ' + str(obj))
+            print(err)
+            raise
 
     for poly in seg['frames'][0]['polygon']:
         object_id = poly['object']

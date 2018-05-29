@@ -170,8 +170,8 @@ def is_valid(name):
                     x = poly['x'][i]
                     y = poly['y'][i]
                     pts.append([x, y])
-                if len(pts) < 3:
-                    return False
+                # if len(pts) < 3:
+                #     return False
 
     except json.decoder.JSONDecodeError:
         return False

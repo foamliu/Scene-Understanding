@@ -158,10 +158,10 @@ def is_valid(name):
 
         for poly in seg['frames'][0]['polygon']:
             object_id = poly['object']
-            if object_id != len(object_names):
+            if object_id >= len(object_names):
                 return False
-            # if not isinstance(poly['x'], list) or not isinstance(poly['y'], list):
-            #     return False
+            if not isinstance(poly['x'], list) or not isinstance(poly['y'], list):
+                return False
             object_name = object_names[object_id]
             if object_name in seg38_dict.keys():
                 # class_id = seg38_dict[object_name]
@@ -170,8 +170,8 @@ def is_valid(name):
                     x = poly['x'][i]
                     y = poly['y'][i]
                     pts.append([x, y])
-                # if len(pts) < 3:
-                #     return False
+                if len(pts) < 3:
+                    return False
 
     except json.decoder.JSONDecodeError:
         return False

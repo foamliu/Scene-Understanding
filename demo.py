@@ -37,7 +37,7 @@ if __name__ == '__main__':
         image = safe_crop(image, x, y, crop_size)
         semantic = safe_crop(semantic, x, y, crop_size)
         semantic = to_bgr(semantic)
-        print('Start processing image: {}'.format(filename))
+        print('Start processing image: {}'.format(name))
 
         x_test = np.empty((1, img_rows, img_cols, 3), dtype=np.float32)
         x_test[0, :, :, 0:3] = image / 255.

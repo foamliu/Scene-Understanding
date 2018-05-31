@@ -3,7 +3,7 @@ from data_generator import get_image, get_semantic
 
 if __name__ == '__main__':
     counts = dict()
-    for i in range(len(num_classes)):
+    for i in range(num_classes):
         counts[i] = 0
 
     filename = '{}_names.txt'.format('train')

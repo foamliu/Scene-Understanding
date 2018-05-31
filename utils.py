@@ -4,6 +4,10 @@ import cv2 as cv
 import tensorflow as tf
 from tensorflow.python.client import device_lib
 
+import json
+with open('inverse_weights.json', 'r') as f:
+    inverse_weights = json.load(f)
+
 
 def sparse_cross_entropy(y_true, y_pred):
     """
@@ -17,6 +21,8 @@ def sparse_cross_entropy(y_true, y_pred):
     so that for each image in the batch there is a one-hot
     encoded array of length num_labels.
     """
+
+    y_pred = y_pred * inverse_weights
 
     # Calculate the loss. This outputs a
     # 3-rank tensor of shape [batch_size, img_rows, img_cols]

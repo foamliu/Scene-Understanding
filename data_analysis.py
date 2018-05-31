@@ -1,5 +1,7 @@
 from config import num_classes, seg38list
 from data_generator import get_image, get_semantic
+from console_progressbar import ProgressBar
+
 
 if __name__ == '__main__':
     counts = dict()
@@ -9,8 +11,12 @@ if __name__ == '__main__':
     filename = '{}_names.txt'.format('train')
     with open(filename, 'r') as f:
         names = f.read().splitlines()
+
+    pb = ProgressBar(total=len(names), prefix='Analyzing train images', suffix='', decimals=3, length=50, fill='=')
+
     total = 0
-    for name in names:
+    for i in range(len(names)):
+        name = names[i]
         image, image_size = get_image(name)
         semantic = get_semantic(name, image_size)
         h, w = semantic.shape[:2]
@@ -19,6 +25,8 @@ if __name__ == '__main__':
             for c in range(w):
                 counts[semantic[r, c]] += 1
         total += h * w
+
+        pb.print_progress_bar(i + 1)
 
     for i in range(len(num_classes)):
         class_name = seg38list[i]

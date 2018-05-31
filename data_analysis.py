@@ -39,4 +39,4 @@ if __name__ == '__main__':
         class_name = seg38list[class_id]
         num_pixels = counts[class_id]
         percent = num_pixels / total
-        print('class_name: {}, num_pixels: {}, percent: {:.4%}'.format(class_name, num_pixels, percent * 100))
+        print('class_name: {}, num_pixels: {}, percent: {:.4%}'.format(class_name, num_pixels, percent))

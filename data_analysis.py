@@ -1,7 +1,8 @@
+import numpy as np
+from console_progressbar import ProgressBar
+
 from config import num_classes, seg38list
 from data_generator import get_image, get_semantic
-from console_progressbar import ProgressBar
-import numpy as np
 
 if __name__ == '__main__':
     counts = dict()
@@ -35,8 +36,16 @@ if __name__ == '__main__':
         pb.print_progress_bar(i + 1)
 
     print('total: {}'.format(total))
+    inverse_weights = []
     for class_id in range(num_classes):
         class_name = seg38list[class_id]
         num_pixels = counts[class_id]
         percent = num_pixels / total
-        print('class_name: {}, num_pixels: {}, percent: {:.4%}'.format(class_name, num_pixels, percent))
+        print('class_name: {}, num_pixels: {}, percent: {:.4%}, inverse weight: {:.4}'.format(class_name, num_pixels,
+                                                                                              percent,
+                                                                                              total / num_pixels))
+        inverse_weights.append(total / num_pixels)
+
+    import json
+    with open('inverse_weights.json', 'w') as output:
+        json.dump(inverse_weights, output, sort_keys=True, indent=4)

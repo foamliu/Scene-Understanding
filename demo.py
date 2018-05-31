@@ -10,6 +10,7 @@ from config import num_classes
 from data_generator import get_image, get_semantic
 from data_generator import random_choice, safe_crop, to_bgr
 from model import build_encoder_decoder
+from utils import class_weights
 
 if __name__ == '__main__':
     img_rows, img_cols = 320, 320
@@ -43,6 +44,7 @@ if __name__ == '__main__':
         x_test[0, :, :, 0:3] = image / 255.
 
         out = model.predict(x_test)
+        out = out * class_weights
         out = np.reshape(out, (img_rows, img_cols, num_classes))
         out = np.argmax(out, axis=2)
         out = to_bgr(out)

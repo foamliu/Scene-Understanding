@@ -6,7 +6,7 @@ from tensorflow.python.client import device_lib
 
 import json
 with open('inverse_weights.json', 'r') as f:
-    inverse_weights = json.load(f)
+    class_weights = json.load(f)
 
 
 def sparse_cross_entropy(y_true, y_pred):
@@ -22,12 +22,12 @@ def sparse_cross_entropy(y_true, y_pred):
     encoded array of length num_labels.
     """
 
-    y_pred = y_pred * inverse_weights
+    weighted_logits = y_pred * class_weights
 
     # Calculate the loss. This outputs a
     # 3-rank tensor of shape [batch_size, img_rows, img_cols]
     loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y_true,
-                                                          logits=y_pred)
+                                                          logits=weighted_logits)
 
     # Keras may reduce this across the first axis (the batch)
     # but the semantics are unclear, so to be sure we use

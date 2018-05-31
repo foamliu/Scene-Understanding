@@ -28,8 +28,8 @@ if __name__ == '__main__':
 
         pb.print_progress_bar(i + 1)
 
-    for i in range(len(num_classes)):
+    for i in range(num_classes):
         class_name = seg38list[i]
         num_pixels = counts[i]
         percent = num_pixels / total
-        print('class_name: {}, num_pixels: {}, perentage: {:.4%}'.format(class_name, num_pixels, percent * 100))
+        print('class_name: {}, num_pixels: {}, percent: {:.4%}'.format(class_name, num_pixels, percent * 100))

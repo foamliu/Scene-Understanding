@@ -22,9 +22,15 @@ if __name__ == '__main__':
         h, w = image_size
         total += h * w
 
+        local_count = 0
         for class_id in range(num_classes):
             mat = (semantic == class_id).astype(np.float32)
-            counts[class_id] += np.sum(mat)
+            more = np.sum(mat)
+            counts[class_id] += more
+            local_count += more
+
+        print('h * w: ' + str(h * w))
+        print('local_count: ' + str(local_count))
 
         pb.print_progress_bar(i + 1)
 

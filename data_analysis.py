@@ -5,8 +5,8 @@ import numpy as np
 
 if __name__ == '__main__':
     counts = dict()
-    for i in range(num_classes):
-        counts[i] = 0
+    for class_id in range(num_classes):
+        counts[class_id] = 0
 
     filename = '{}_names.txt'.format('train')
     with open(filename, 'r') as f:
@@ -19,17 +19,18 @@ if __name__ == '__main__':
         name = names[i]
         image, image_size = get_image(name)
         semantic = get_semantic(name, image_size)
-        h, w = semantic.shape[:2]
+        h, w = image_size
+        total += h * w
 
         for class_id in range(num_classes):
             mat = (semantic == class_id).astype(np.float32)
             counts[class_id] += np.sum(mat)
-        total += h * w
 
         pb.print_progress_bar(i + 1)
 
-    for i in range(num_classes):
-        class_name = seg38list[i]
-        num_pixels = counts[i]
+    print('total: {}'.format(total))
+    for class_id in range(num_classes):
+        class_name = seg38list[class_id]
+        num_pixels = counts[class_id]
         percent = num_pixels / total
         print('class_name: {}, num_pixels: {}, percent: {:.4%}'.format(class_name, num_pixels, percent * 100))

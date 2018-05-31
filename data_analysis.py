@@ -1,7 +1,7 @@
 from config import num_classes, seg38list
 from data_generator import get_image, get_semantic
 from console_progressbar import ProgressBar
-
+import numpy as np
 
 if __name__ == '__main__':
     counts = dict()
@@ -21,9 +21,9 @@ if __name__ == '__main__':
         semantic = get_semantic(name, image_size)
         h, w = semantic.shape[:2]
 
-        for r in range(h):
-            for c in range(w):
-                counts[semantic[r, c]] += 1
+        for class_id in range(num_classes):
+            mat = (semantic == class_id).astype(np.float32)
+            counts[class_id] += np.sum(mat)
         total += h * w
 
         pb.print_progress_bar(i + 1)

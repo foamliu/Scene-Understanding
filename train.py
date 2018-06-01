@@ -46,7 +46,7 @@ if __name__ == '__main__':
                 model.load_weights(pretrained_path)
             else:
                 model = build_encoder_decoder()
-                migrate.migrate_model(model)
+                # migrate.migrate_model(model)
 
         new_model = multi_gpu_model(model, gpus=num_gpu)
         # rewrite the callback: saving through the original model and not the multi-gpu model.
@@ -57,9 +57,9 @@ if __name__ == '__main__':
             new_model.load_weights(pretrained_path)
         else:
             new_model = build_encoder_decoder()
-            migrate.migrate_model(new_model)
+            # migrate.migrate_model(new_model)
 
-    sgd = keras.optimizers.SGD(lr=0.001, momentum=0.9, decay=0.0005, nesterov=True)
+    # sgd = keras.optimizers.SGD(lr=0.001, momentum=0.9, decay=0.0005, nesterov=True)
     decoder_target = tf.placeholder(dtype='int32', shape=(None, None, None))
     new_model.compile(optimizer='nadam', loss=sparse_cross_entropy, target_tensors=[decoder_target])
 

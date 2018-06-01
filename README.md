@@ -16,6 +16,7 @@ Follow the [instruction](http://3dvision.princeton.edu/projects/2015/SUNrgbd/) t
 
 ```bash
 $ wget http://3dvision.princeton.edu/projects/2015/SUNrgbd/data/SUNRGBD.zip
+$ wget http://3dvision.princeton.edu/projects/2015/SUNrgbd/data/SUNRGBDtoolbox.zip
 ```
 
 ## Architecture

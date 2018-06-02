@@ -44,7 +44,7 @@ if __name__ == '__main__':
         x_test[0, :, :, 0:3] = image / 255.
 
         out = model.predict(x_test)
-        out = out * class_weights
+        # out = out * class_weights
         out = np.reshape(out, (img_rows, img_cols, num_classes))
         out = np.argmax(out, axis=2)
         out = to_bgr(out)

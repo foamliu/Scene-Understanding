@@ -1,5 +1,5 @@
 import keras.backend as K
-from keras.layers import Input, Conv2D, UpSampling2D, BatchNormalization, ZeroPadding2D, MaxPooling2D, Concatenate, \
+from keras.layers import Input, Conv2D, UpSampling2D, BatchNormalization, MaxPooling2D, Concatenate, \
     Reshape
 from keras.models import Model
 from keras.utils import plot_model
@@ -160,9 +160,9 @@ def build_encoder_decoder():
                bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
 
-    x = Conv2D(num_classes, (1, 1), activation='softmax', padding='valid', name='pred', kernel_initializer='he_normal',
-               bias_initializer='zeros')(x)
-    outputs = BatchNormalization()(x)
+    outputs = Conv2D(num_classes, (1, 1), activation='softmax', padding='valid', name='pred',
+                     kernel_initializer='he_normal',
+                     bias_initializer='zeros')(x)
 
     model = Model(inputs=input_tensor, outputs=outputs, name="SegNet")
     return model

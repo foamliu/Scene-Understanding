@@ -25,12 +25,12 @@ if __name__ == '__main__':
         pb.print_progress_bar(i + 1)
 
     # normalize on training set
-    for k in lbl_counts:
+    for k in lbl_counts.keys():
         lbl_counts[k] /= num_samples
 
     print("##########################")
     print("class probability:")
-    for k in lbl_counts:
+    for k in lbl_counts.keys():
         print("%i: %f" % (k, lbl_counts[k]))
     print("##########################")
 

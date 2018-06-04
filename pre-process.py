@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import argparse
 import os
-import numpy as np
-import hdf5storage
 import zipfile
+
 import cv2 as cv
+import hdf5storage
+import numpy as np
+from console_progressbar import ProgressBar
 
 # python pre-process.py -d ../../data/Semantic-Segmentation/data/
 if __name__ == '__main__':
@@ -37,8 +39,11 @@ if __name__ == '__main__':
     if not os.path.exists(seg_path):
         os.makedirs(seg_path)
 
+    pb = ProgressBar(total=num_samples, prefix='Processing images', suffix='', decimals=3, length=50, fill='=')
+
     for i in range(num_samples):
         semantic = SUNRGBD2Dseg[0][i][0]
         semantic = semantic.astype(np.uint8)
         filename = os.join(seg_path, '{}.png'.format(i))
         cv.imwrite(filename, semantic)
+        pb.print_progress_bar(i + 1)

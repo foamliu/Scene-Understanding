@@ -60,3 +60,8 @@ if __name__ == '__main__':
             print("    class_weighting:", missing_class_weight)
     print("  }")
     print("########################################################")
+
+    weights = []
+    for k in range(max_class_id):
+        weights.append(lbl_weights[k])
+    np.save('median_frequency_class_balancing_weights.npy', np.array(weights))

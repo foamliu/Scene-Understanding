@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import argparse
 import os
+import numpy as np
+import hdf5storage
 import zipfile
+import cv2 as cv
 
 # python pre-process.py -d ../../data/Semantic-Segmentation/data/
 if __name__ == '__main__':
@@ -25,3 +28,17 @@ if __name__ == '__main__':
     print('Extracting {}...'.format(filename))
     with zipfile.ZipFile(filename, 'r') as zip_file:
         zip_file.extractall(data_path)
+
+    filename = 'data/SUNRGBDtoolbox/Metadata/SUNRGBD2Dseg.mat'
+    SUNRGBD2Dseg = hdf5storage.loadmat(filename)
+    num_samples = len(SUNRGBD2Dseg['SUNRGBD2Dseg'][0])
+
+    seg_path = 'data/SUNRGBD2Dseg'
+    if not os.path.exists(seg_path):
+        os.makedirs(seg_path)
+
+    for i in range(num_samples):
+        semantic = SUNRGBD2Dseg[0][i][0]
+        semantic = semantic.astype(np.uint8)
+        filename = os.join(seg_path, '{}.png'.format(i))
+        cv.imwrite(filename, semantic)

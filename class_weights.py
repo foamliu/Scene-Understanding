@@ -1,5 +1,6 @@
 import hdf5storage
 import numpy as np
+from console_progressbar import ProgressBar
 
 if __name__ == '__main__':
     filename = 'data/SUNRGBDtoolbox/Metadata/SUNRGBD2Dseg.mat'
@@ -7,6 +8,8 @@ if __name__ == '__main__':
     num_samples = len(SUNRGBD2Dseg['SUNRGBD2Dseg'][0])
 
     lbl_counts = {}
+
+    pb = ProgressBar(total=num_samples, prefix='Processing images', suffix='', decimals=3, length=50, fill='=')
 
     for i in range(num_samples):
         img = SUNRGBD2Dseg[0][i][0]
@@ -18,6 +21,8 @@ if __name__ == '__main__':
                 lbl_counts[id[j]] += counts[j]
             else:
                 lbl_counts[id[j]] = counts[j]
+
+        pb.print_progress_bar(i + 1)
 
     # normalize on training set
     for k in lbl_counts:

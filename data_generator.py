@@ -9,12 +9,7 @@ from keras.utils import Sequence
 
 from config import folder_metadata, folder_rgb_image
 from config import img_rows, img_cols, batch_size, colors
-
-filename = os.path.join(folder_metadata, 'SUNRGBDMeta.mat')
-SUNRGBDMeta = hdf5storage.loadmat(filename)
-filename = 'data/SUNRGBDtoolbox/Metadata/SUNRGBD2Dseg.mat'
-SUNRGBD2Dseg = hdf5storage.loadmat(filename)
-num_samples = len(SUNRGBD2Dseg['SUNRGBD2Dseg'][0])
+from config import seg_path
 
 
 def get_image(name):
@@ -27,7 +22,8 @@ def get_image(name):
 
 
 def get_semantic(id):
-    semantic = SUNRGBD2Dseg[0][id][0]
+    filename = os.join(seg_path, '{}.png'.format(id))
+    semantic = cv.imread(filename, 0)
     semantic = semantic.astype(np.int32)
     return semantic
 

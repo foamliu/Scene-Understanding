@@ -1,10 +1,4 @@
-import json
-import os
-import random
-
-import cv2 as cv
 import hdf5storage
-import numpy as np
 
 img_rows, img_cols = 320, 320
 channel = 3
@@ -20,9 +14,14 @@ num_train_samples = 7460
 num_valid_samples = 1866
 num_classes = 38
 
-seg38list = ['others']
-for item in hdf5storage.loadmat('seg37list.mat')['seg37list'][0]:
-    seg38list.append(item[0])
+folder_metadata = 'data/SUNRGBDtoolbox/Metadata/'
+folder_2D_segmentation = 'annotation2Dfinal'
+folder_rgb_image = 'image'
+
+num_samples = 10335
+seg_path = 'data/SUNRGBD2Dseg'
+
+seg37list = hdf5storage.loadmat('seg37list.mat')['seg37list'][0]
 # print(seg37list)
 # ['wall',
 #  'floor',
@@ -62,9 +61,6 @@ for item in hdf5storage.loadmat('seg37list.mat')['seg37list'][0]:
 #  'bathtub',
 #  'bag']
 
-seg38_dict = dict()
-for i in range(len(seg38list)):
-    seg38_dict[seg38list[i]] = i
 
 objectColors = ['#000000', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd',
                 '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d',
@@ -77,57 +73,3 @@ objectColors = ['#000000', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a'
                 '#e7cb94', '#e7ba52', '#bd9e39', '#8c6d31', '#e7969c', '#d6616b', '#ad494a', '#843c39', '#de9ed6',
                 '#ce6dbd', '#a55194', '#7b4173', '#000000', '#0000FF']
 colors = [[int(c[1:3], 16), int(c[3:5], 16), int(c[5:7], 16)] for c in objectColors]
-
-folder_metadata = 'data/SUNRGBDtoolbox/Metadata/'
-folder_2D_segmentation = 'annotation2Dfinal'
-folder_rgb_image = 'image'
-
-if __name__ == '__main__':
-    filename = '{}_names.txt'.format('train')
-    with open(filename, 'r') as f:
-        names = f.read().splitlines()
-
-    item = random.choice(names)
-    print(item)
-
-    image_path = os.path.join('data', item)
-    image_path = os.path.join(image_path, folder_rgb_image)
-    image_name = [f for f in os.listdir(image_path) if f.endswith('.jpg')][0]
-    image_path = os.path.join(image_path, image_name)
-    image = cv.imread(image_path)
-    h, w = image.shape[:2]
-
-    seg_path = os.path.join('data', item)
-    seg_path = os.path.join(seg_path, folder_2D_segmentation)
-    seg_path = os.path.join(seg_path, 'index.json')
-    with open(seg_path, 'r') as f:
-        seg = json.load(f)
-
-    # print(seg['frames'])
-    # print(seg['frames'][0]['polygon'])
-    # print(len(seg['frames'][0]['polygon']))
-
-    mask = np.zeros((h, w, 3), np.uint8)
-
-    object_names = []
-    for obj in seg['objects']:
-        if not obj:
-            object_names.append(None)
-        else:
-            object_names.append(obj['name'])
-
-    for poly in seg['frames'][0]['polygon']:
-        object_id = poly['object']
-        object_name = object_names[object_id]
-        if object_name in seg38_dict.keys():
-            class_id = seg38_dict[object_name]
-            object_color = colors[class_id]
-
-            pts = []
-            for i in range(len(poly['x'])):
-                x = poly['x'][i]
-                y = poly['y'][i]
-                pts.append([x, y])
-            cv.fillPoly(mask, np.array([pts], dtype=np.int32), object_color)
-
-    cv.imwrite('sample.png', mask)

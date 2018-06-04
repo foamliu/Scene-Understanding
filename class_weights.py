@@ -1,18 +1,19 @@
-import hdf5storage
+import os
+
+import cv2 as cv
 import numpy as np
 from console_progressbar import ProgressBar
 
-if __name__ == '__main__':
-    filename = 'data/SUNRGBDtoolbox/Metadata/SUNRGBD2Dseg.mat'
-    SUNRGBD2Dseg = hdf5storage.loadmat(filename)
-    num_samples = len(SUNRGBD2Dseg['SUNRGBD2Dseg'][0])
+from config import num_samples, seg_path
 
+if __name__ == '__main__':
     lbl_counts = {}
 
     pb = ProgressBar(total=num_samples, prefix='Processing images', suffix='', decimals=3, length=50, fill='=')
 
     for i in range(num_samples):
-        img = SUNRGBD2Dseg[0][i][0]
+        filename = os.join(seg_path, '{}.png'.format(i))
+        img = cv.imread(filename, 0)
         id, counts = np.unique(img, return_counts=True)
         # normalize on image
         counts = counts / float(sum(counts))
@@ -35,7 +36,7 @@ if __name__ == '__main__':
     print("##########################")
 
     # normalize on median freuqncy
-    med_frequ = np.median(lbl_counts.values())
+    med_frequ = np.median(list(lbl_counts.values()))
     lbl_weights = {}
     for k in lbl_counts:
         lbl_weights[k] = med_frequ / lbl_counts[k]
@@ -49,7 +50,7 @@ if __name__ == '__main__':
     # class weight for classes that are not present in labeled image
     missing_class_weight = 100000
 
-    max_class_id = np.max(lbl_weights.keys()) + 1
+    max_class_id = np.max(list(lbl_weights.keys())) + 1
 
     # print formated output for caffe prototxt
     print("########################################################")
@@ -66,6 +67,7 @@ if __name__ == '__main__':
     print("  }")
     print("########################################################")
 
+    print('Saving as a NPY file.')
     weights = []
     for k in range(max_class_id):
         weights.append(lbl_weights[k])

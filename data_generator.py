@@ -1,4 +1,3 @@
-import json
 import os
 import random
 from random import shuffle
@@ -8,9 +7,14 @@ import hdf5storage
 import numpy as np
 from keras.utils import Sequence
 
-from config import folder_metadata, folder_rgb_image, folder_2D_segmentation
+from config import folder_metadata, folder_rgb_image
 from config import img_rows, img_cols, batch_size, colors
-from config import seg38_dict
+
+filename = os.path.join(folder_metadata, 'SUNRGBDMeta.mat')
+SUNRGBDMeta = hdf5storage.loadmat(filename)
+filename = 'data/SUNRGBDtoolbox/Metadata/SUNRGBD2Dseg.mat'
+SUNRGBD2Dseg = hdf5storage.loadmat(filename)
+num_samples = len(SUNRGBD2Dseg['SUNRGBD2Dseg'][0])
 
 
 def get_image(name):
@@ -19,41 +23,12 @@ def get_image(name):
     image_name = [f for f in os.listdir(image_path) if f.endswith('.jpg')][0]
     image_path = os.path.join(image_path, image_name)
     image = cv.imread(image_path)
-    image_size = image.shape[:2]
-    return image, image_size
+    return image
 
 
-def get_semantic(name, image_size):
-    seg_path = os.path.join('data', name)
-    seg_path = os.path.join(seg_path, folder_2D_segmentation)
-    seg_path = os.path.join(seg_path, 'index.json')
-
-    h, w = image_size
-    semantic = np.zeros((h, w, 1), np.int32)
-
-    with open(seg_path, 'r') as f:
-        seg = json.load(f)
-
-    object_names = []
-    for obj in seg['objects']:
-        if not obj:
-            object_names.append(None)
-        else:
-            object_names.append(obj['name'])
-
-    for poly in seg['frames'][0]['polygon']:
-        object_id = poly['object']
-        object_name = object_names[object_id]
-        if object_name in seg38_dict.keys():
-            class_id = (seg38_dict[object_name])
-            pts = []
-            for i in range(len(poly['x'])):
-                x = poly['x'][i]
-                y = poly['y'][i]
-                pts.append([x, y])
-                cv.fillPoly(semantic, [np.array(pts, np.int32)], class_id)
-
-    semantic = np.reshape(semantic, (h, w))
+def get_semantic(id):
+    semantic = SUNRGBD2Dseg[0][id][0]
+    semantic = semantic.astype(np.int32)
     return semantic
 
 
@@ -96,26 +71,30 @@ class DataGenSequence(Sequence):
     def __init__(self, usage):
         self.usage = usage
 
-        filename = '{}_names.txt'.format(usage)
-        with open(filename, 'r') as f:
+        with open('{}_ids.txt'.format(usage), 'r') as f:
+            self.ids = f.read().splitlines()
+
+        with open('names.txt', 'r') as f:
             self.names = f.read().splitlines()
 
-        np.random.shuffle(self.names)
+        np.random.shuffle(self.ids)
 
     def __len__(self):
-        return int(np.ceil(len(self.names) / float(batch_size)))
+        return int(np.ceil(len(self.ids) / float(batch_size)))
 
     def __getitem__(self, idx):
         i = idx * batch_size
 
-        length = min(batch_size, (len(self.names) - i))
+        length = min(batch_size, (len(self.ids) - i))
         batch_x = np.empty((length, img_rows, img_cols, 3), dtype=np.float32)
         batch_y = np.empty((length, img_rows, img_cols), dtype=np.int32)
 
         for i_batch in range(length):
-            name = self.names[i]
-            image, image_size = get_image(name)
-            semantic = get_semantic(name, image_size)
+            id = self.ids[i]
+            name = self.names[id]
+            image = get_image(name)
+            semantic = get_semantic(id)
+            image_size = image.shape[:2]
 
             different_sizes = [(320, 320), (480, 480), (640, 640)]
             crop_size = random.choice(different_sizes)
@@ -139,45 +118,7 @@ class DataGenSequence(Sequence):
         return batch_x, batch_y
 
     def on_epoch_end(self):
-        np.random.shuffle(self.names)
-
-
-def is_valid(name):
-    seg_path = os.path.join('data', name)
-    seg_path = os.path.join(seg_path, folder_2D_segmentation)
-    seg_path = os.path.join(seg_path, 'index.json')
-    try:
-        with open(seg_path, 'r') as f:
-            seg = json.load(f)
-
-        object_names = []
-        for obj in seg['objects']:
-            if not obj:
-                object_names.append(None)
-            else:
-                object_names.append(obj['name'])
-
-        for poly in seg['frames'][0]['polygon']:
-            object_id = poly['object']
-            if object_id >= len(object_names):
-                return False
-            if not isinstance(poly['x'], list) or not isinstance(poly['y'], list):
-                return False
-            object_name = object_names[object_id]
-            if object_name in seg38_dict.keys():
-                # class_id = seg38_dict[object_name]
-                pts = []
-                for i in range(len(poly['x'])):
-                    x = poly['x'][i]
-                    y = poly['y'][i]
-                    pts.append([x, y])
-                if len(pts) < 3:
-                    return False
-
-    except json.decoder.JSONDecodeError:
-        return False
-
-    return True
+        np.random.shuffle(self.ids)
 
 
 def train_gen():
@@ -194,8 +135,7 @@ def split_data():
     names = []
     for item in meta['SUNRGBDMeta'][0]:
         name = item[0][0]
-        if is_valid(name):
-            names.append(item[0][0])
+        names.append(name)
 
     num_samples = len(names)  # 10335
     print('num_samples: ' + str(num_samples))
@@ -204,16 +144,19 @@ def split_data():
     print('num_train_samples: ' + str(num_train_samples))
     num_valid_samples = num_samples - num_train_samples
     print('num_valid_samples: ' + str(num_valid_samples))
-    valid_names = random.sample(names, num_valid_samples)
-    train_names = [n for n in names if n not in valid_names]
-    shuffle(valid_names)
-    shuffle(train_names)
+    valid_ids = random.sample(range(num_train_samples), num_valid_samples)
+    train_ids = [n for n in range(num_train_samples) if n not in valid_ids]
+    shuffle(valid_ids)
+    shuffle(train_ids)
 
-    with open('valid_names.txt', 'w') as file:
-        file.write('\n'.join(valid_names))
+    with open('names.txt', 'w') as file:
+        file.write('\n'.join(names))
 
-    with open('train_names.txt', 'w') as file:
-        file.write('\n'.join(train_names))
+    with open('valid_ids.txt', 'w') as file:
+        file.write('\n'.join(valid_ids))
+
+    with open('train_ids.txt', 'w') as file:
+        file.write('\n'.join(train_ids))
 
 
 if __name__ == '__main__':

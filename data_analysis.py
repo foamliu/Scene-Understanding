@@ -2,7 +2,7 @@ import numpy as np
 from console_progressbar import ProgressBar
 
 from config import num_classes, seg38list
-from data_generator import get_image, get_semantic
+from data_generator import get_image, get_category
 
 if __name__ == '__main__':
     counts = dict()
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     for i in range(len(names)):
         name = names[i]
         image, image_size = get_image(name)
-        semantic = get_semantic(name, image_size)
+        semantic = get_category(name, image_size)
         h, w = image_size
         total += h * w
 

@@ -4,7 +4,7 @@ import unittest
 
 import cv2 as cv
 
-from data_generator import get_image, get_semantic, to_bgr
+from data_generator import get_image, get_category, to_bgr
 from data_generator import random_choice, safe_crop
 
 
@@ -20,7 +20,7 @@ class TestStringMethods(unittest.TestCase):
         name = 'SUNRGBD/kv1/NYUdata/NYU0899'
         image, image_size = get_image(name)
         print('image_size: ' + str(image_size))
-        semantic = get_semantic(name, image_size)
+        semantic = get_category(name, image_size)
         semantic = to_bgr(semantic)
         cv.imwrite('temp/test_get_semantic_image.png', image)
         cv.imwrite('temp/test_get_semantic_semantic.png', semantic)
@@ -28,7 +28,7 @@ class TestStringMethods(unittest.TestCase):
     def test_safe_crop(self):
         name = 'SUNRGBD/kv1/NYUdata/NYU0899'
         image, image_size = get_image(name)
-        semantic = get_semantic(name, image_size)
+        semantic = get_category(name, image_size)
         different_sizes = [(320, 320), (480, 480), (640, 640)]
         crop_size = random.choice(different_sizes)
 

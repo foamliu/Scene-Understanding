@@ -1,7 +1,8 @@
 import multiprocessing
 
 import cv2 as cv
-import tensorflow as tf
+import keras.backend as K
+import numpy as np
 from tensorflow.python.client import device_lib
 
 import json
@@ -9,33 +10,27 @@ with open('inverse_weights.json', 'r') as f:
     class_weights = json.load(f)
 
 
-def sparse_cross_entropy(y_true, y_pred):
-    """
-    Calculate the cross-entropy loss between y_true and y_pred.
+# Load the color prior factor that encourages rare colors
+prior_factor = np.load("data/prior_factor.npy")
+prior_factor = prior_factor.astype(np.float32)
 
-    y_true is a 3-rank tensor with the desired output.
-    The shape is [batch_size, img_rows, img_cols].
 
-    y_pred is the decoder's output which is a 4-rank tensor
-    with shape [batch_size, img_rows, img_cols, num_labels]
-    so that for each image in the batch there is a one-hot
-    encoded array of length num_labels.
-    """
+def categorical_crossentropy(y_true, y_pred):
+    q = 313
+    y_true = K.reshape(y_true, (-1, q))
+    y_pred = K.reshape(y_pred, (-1, q))
 
-    # weighted_logits = y_pred * class_weights
+    idx_max = K.argmax(y_true, axis=1)
+    weights = K.gather(prior_factor, idx_max)
+    weights = K.reshape(weights, (-1, 1))
 
-    # Calculate the loss. This outputs a
-    # 3-rank tensor of shape [batch_size, img_rows, img_cols]
-    loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y_true,
-                                                          logits=y_pred)
+    # multiply y_true by weights
+    y_true = y_true * weights
 
-    # Keras may reduce this across the first axis (the batch)
-    # but the semantics are unclear, so to be sure we use
-    # the loss across the entire 3-rank tensor, we reduce it
-    # to a single scalar with the mean function.
-    loss_mean = tf.reduce_mean(loss)
+    cross_ent = K.categorical_crossentropy(y_pred, y_true)
+    cross_ent = K.mean(cross_ent, axis=-1)
 
-    return loss_mean
+    return cross_ent
 
 
 # getting the number of GPUs

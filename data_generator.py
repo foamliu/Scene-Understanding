@@ -6,10 +6,11 @@ import cv2 as cv
 import hdf5storage
 import numpy as np
 from keras.utils import Sequence
+from keras.utils import to_categorical
 
 from config import folder_metadata, folder_rgb_image
 from config import img_rows, img_cols, batch_size, colors
-from config import seg_path
+from config import seg_path, num_classes
 
 
 def get_image(name):
@@ -21,7 +22,7 @@ def get_image(name):
     return image
 
 
-def get_semantic(id):
+def get_category(id):
     filename = os.path.join(seg_path, '{}.png'.format(id))
     semantic = cv.imread(filename, 0)
     semantic = semantic.astype(np.int32)
@@ -89,7 +90,7 @@ class DataGenSequence(Sequence):
             id = self.ids[i]
             name = self.names[id]
             image = get_image(name)
-            semantic = get_semantic(id)
+            category = get_category(id)
             image_size = image.shape[:2]
 
             different_sizes = [(320, 320), (480, 480), (640, 640)]
@@ -97,17 +98,17 @@ class DataGenSequence(Sequence):
 
             x, y = random_choice(image_size, crop_size)
             image = safe_crop(image, x, y, crop_size)
-            semantic = safe_crop(semantic, x, y, crop_size)
+            category = safe_crop(category, x, y, crop_size)
 
             if np.random.random_sample() > 0.5:
                 image = np.fliplr(image)
-                semantic = np.fliplr(semantic)
+                category = np.fliplr(category)
 
             x = image / 255.
-            y = semantic
+            y = category
 
             batch_x[i_batch, :, :, 0:3] = x
-            batch_y[i_batch, :, :] = y
+            batch_y[i_batch, :, :] = to_categorical(y, num_classes)
 
             i += 1
 

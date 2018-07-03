@@ -7,7 +7,7 @@ import keras.backend as K
 import numpy as np
 
 from config import num_classes
-from data_generator import get_image, get_semantic
+from data_generator import get_image, get_category
 from data_generator import random_choice, safe_crop, to_bgr
 from model import build_encoder_decoder
 from utils import class_weights
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     for i in range(len(samples)):
         name = samples[i]
         image, image_size = get_image(name)
-        semantic = get_semantic(name, image_size)
+        semantic = get_category(name, image_size)
         different_sizes = [(320, 320), (480, 480), (640, 640)]
         crop_size = random.choice(different_sizes)
 

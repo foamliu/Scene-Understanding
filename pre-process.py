@@ -34,6 +34,12 @@ if __name__ == '__main__':
     filename = 'data/SUNRGBDtoolbox/Metadata/SUNRGBD2Dseg.mat'
     SUNRGBD2Dseg = hdf5storage.loadmat(filename)
     num_samples = len(SUNRGBD2Dseg['SUNRGBD2Dseg'][0])
+    print('num_samples: ' + str(num_samples))
+
+    print('SUNRGBD2Dseg: ' + str(SUNRGBD2Dseg))
+    print('SUNRGBD2Dseg[0]: ' + str(SUNRGBD2Dseg[0]))
+    print('SUNRGBD2Dseg[0][0]: ' + str(SUNRGBD2Dseg[0][0]))
+    print('SUNRGBD2Dseg[0][0][0]: ' + str(SUNRGBD2Dseg[0][0][0]))
 
     seg_path = 'data/SUNRGBD2Dseg'
     if not os.path.exists(seg_path):
@@ -44,6 +50,6 @@ if __name__ == '__main__':
     for i in range(num_samples):
         semantic = SUNRGBD2Dseg[0][i][0]
         semantic = semantic.astype(np.uint8)
-        filename = os.join(seg_path, '{}.png'.format(i))
+        filename = os.path.join(seg_path, '{}.png'.format(i))
         cv.imwrite(filename, semantic)
         pb.print_progress_bar(i + 1)

@@ -13,23 +13,17 @@ from config import num_classes, seg_path
 def compute_class_prior(do_plot=False):
     names = [f for f in os.listdir(seg_path) if f.lower().endswith('.png')]
     num_samples = len(names)
-    ind = np.array([])
+    prior_prob = np.zeros(num_classes)
     pb = ProgressBar(total=num_samples, prefix='Compute class prior', suffix='', decimals=3, length=50, fill='=')
     for i in range(num_samples):
         name = names[i]
         filename = os.path.join(seg_path, name)
         category = np.ravel(cv.imread(filename, 0))
-        ind = np.append(ind, category)
+        counts = np.bincount(category)
+        idxs = np.nonzero(counts)[0]
+        prior_prob[idxs] += counts[idxs]
         pb.print_progress_bar(i + 1)
 
-    # We now count the number of occurrences of each class
-    counts = np.bincount(ind)
-    idxs = np.nonzero(counts)[0]
-    prior_prob = np.zeros(num_classes)
-    for i in range(num_classes):
-        prior_prob[idxs] = counts[idxs]
-
-    # We turn this into a color probability
     prior_prob = prior_prob / (1.0 * np.sum(prior_prob))
 
     # Save

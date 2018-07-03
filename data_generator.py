@@ -22,7 +22,7 @@ def get_image(name):
 
 
 def get_semantic(id):
-    filename = os.join(seg_path, '{}.png'.format(id))
+    filename = os.path.join(seg_path, '{}.png'.format(id))
     semantic = cv.imread(filename, 0)
     semantic = semantic.astype(np.int32)
     return semantic

@@ -26,6 +26,7 @@ if __name__ == '__main__':
         ids = f.read().splitlines()
         ids = list(map(int, ids))
     samples = random.sample(ids, 10)
+    print('samples: ' + str(samples))
 
     for i in range(len(samples)):
         name = names[i]

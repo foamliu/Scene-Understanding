@@ -10,17 +10,15 @@ if __name__ == '__main__':
     margin_x, margin_y = 5, 15
 
     frame = np.zeros((num_rows * height_cell, num_cols * width_cell, 3), np.uint8)
+    seg38list = np.append('other', seg37list)
 
     for i in range(num_rows):
         for j in range(num_cols):
             id = i * num_cols + j
             print(id)
-            if id <= num_classes - 1:
+            if id < num_classes:
                 color = colors[id]
-                if id == num_classes - 1:
-                    name = 'other'
-                else:
-                    name = seg37list[id][0]
+                name = seg38list[id]
                 print(name)
                 top = i * height_cell
                 left = j * width_cell

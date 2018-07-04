@@ -1,45 +1,45 @@
-# SemanticSegmentation
+# 语义分割
 
-This repository is to do Indoor Semantic Segmentation with SegNet.
+用SegNet进行室内语义分割。
 
-## Dependencies
+## 依赖
 - [NumPy](http://docs.scipy.org/doc/numpy-1.10.1/user/install.html)
 - [Tensorflow](https://www.tensorflow.org/versions/r0.8/get_started/os_setup.html)
 - [Keras](https://keras.io/#installation)
 - [OpenCV](https://opencv-python-tutroals.readthedocs.io/en/latest/)
 
-## Dataset
+## 数据集
 
 ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/dataset.png)
 
-Follow the [instruction](http://3dvision.princeton.edu/projects/2015/SUNrgbd/) to download SUN RGB-D dataset into data folder.
+按照 [instruction](http://3dvision.princeton.edu/projects/2015/SUNrgbd/) 下载 SUN RGB-D 数据集并放在 data 目录内。
 
 ```bash
 $ wget http://3dvision.princeton.edu/projects/2015/SUNrgbd/data/SUNRGBD.zip
 $ wget http://3dvision.princeton.edu/projects/2015/SUNrgbd/data/SUNRGBDtoolbox.zip
 ```
 
-## Architecture
+## 架构
 
 ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/segnet.png)
 
 
-## ImageNet Pretrained Models
-Download [VGG16](https://github.com/fchollet/deep-learning-models/releases/download/v0.1/vgg16_weights_tf_dim_ordering_tf_kernels.h5) into models folder.
+## ImageNet 预训练模型
+下载 [VGG16](https://github.com/fchollet/deep-learning-models/releases/download/v0.1/vgg16_weights_tf_dim_ordering_tf_kernels.h5) 放在 models 目录内。
 
-## Usage
-### Data Pre-processing
+## 用法
+### 数据预处理
 The dataset contains 10335 RGBD images of SUNRGBD V1, extract training images:
 ```bash
 $ python pre-process.py
 ```
 
-### Train
+### 训练
 ```bash
 $ python train.py
 ```
 
-If you want to visualize during training, run in your terminal:
+如果想可视化训练过程，执行：
 ```bash
 $ tensorboard --logdir path_to_current_dir/logs
 ```
@@ -49,6 +49,9 @@ $ tensorboard --logdir path_to_current_dir/logs
 ```bash
 $ python demo.py
 ```
+
+图例
+![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/legend.png)
 
 Input | GT | Output |
 |---|---|---|
@@ -63,4 +66,3 @@ Input | GT | Output |
 |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/8_image.png)  | ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/8_gt.png) | ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/8_out.png)|
 |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/9_image.png)  | ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/9_gt.png) | ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/9_out.png)|
 
-![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/legend.png)

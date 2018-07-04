@@ -25,9 +25,6 @@ def get_image(name):
 def get_category(id):
     filename = os.path.join(seg_path, '{}.png'.format(id))
     category = cv.imread(filename, 0)
-    if category is None:
-        raise Exception('file not found error: {}'.format(filename))
-    category = category.astype(np.int32)
     return category
 
 

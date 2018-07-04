@@ -14,7 +14,7 @@ num_classes = 38
 folder_metadata = 'data/SUNRGBDtoolbox/Metadata/'
 folder_2D_segmentation = 'annotation2Dfinal'
 folder_rgb_image = 'image'
-seg_path = 'data/SUNRGBD2Dseg'
+seg_path = 'data/SUNRGBD2Dseg/'
 
 seg37list = hdf5storage.loadmat('seg37list.mat')['seg37list'][0]
 # print(seg37list)

@@ -5,11 +5,10 @@ import tensorflow as tf
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 from keras.utils import multi_gpu_model
 
-import migrate
 from config import patience, epochs, num_train_samples, num_valid_samples, batch_size
 from data_generator import train_gen, valid_gen
 from model import build_encoder_decoder
-from utils import get_available_gpus, get_available_cpus, sparse_cross_entropy
+from utils import get_available_gpus, get_available_cpus, categorical_crossentropy
 
 if __name__ == '__main__':
     # Parse arguments
@@ -53,9 +52,8 @@ if __name__ == '__main__':
         if pretrained_path is not None:
             new_model.load_weights(pretrained_path)
 
-    # sgd = keras.optimizers.SGD(lr=0.001, momentum=0.9, decay=0.0005, nesterov=True)
-    decoder_target = tf.placeholder(dtype='int32', shape=(None, None, None))
-    new_model.compile(optimizer='nadam', loss=sparse_cross_entropy, target_tensors=[decoder_target])
+    adam = keras.optimizers.Adam(lr=1e-4, beta_1=0.9, beta_2=0.99, epsilon=1e-08, decay=5E-6)
+    new_model.compile(optimizer=adam, loss=categorical_crossentropy)
 
     print(new_model.summary())
 

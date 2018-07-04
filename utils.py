@@ -5,12 +5,8 @@ import keras.backend as K
 import numpy as np
 from tensorflow.python.client import device_lib
 
-import json
-with open('inverse_weights.json', 'r') as f:
-    class_weights = json.load(f)
 
-
-# Load the color prior factor that encourages rare colors
+# Load the class prior factor that encourages rare classes
 prior_factor = np.load("data/prior_factor.npy")
 prior_factor = prior_factor.astype(np.float32)
 

@@ -24,9 +24,11 @@ def get_image(name):
 
 def get_category(id):
     filename = os.path.join(seg_path, '{}.png'.format(id))
-    semantic = cv.imread(filename, 0)
-    semantic = semantic.astype(np.int32)
-    return semantic
+    category = cv.imread(filename, 0)
+    if category is None:
+        raise Exception('file not found error: {}'.format(filename))
+    category = category.astype(np.int32)
+    return category
 
 
 def to_bgr(category):
@@ -37,29 +39,6 @@ def to_bgr(category):
             color_id = category[r, c]
             # print("color_id: " + str(color_id))
             ret[r, c, :] = colors[color_id]
-    ret = ret.astype(np.uint8)
-    return ret
-
-
-def random_choice(image_size, crop_size):
-    height, width = image_size
-    crop_height, crop_width = crop_size
-    x = random.randint(0, max(0, width - crop_width))
-    y = random.randint(0, max(0, height - crop_height))
-    return x, y
-
-
-def safe_crop(mat, x, y, crop_size):
-    crop_height, crop_width = crop_size
-    if len(mat.shape) == 2:
-        ret = np.zeros((crop_height, crop_width), np.float32)
-    else:
-        ret = np.zeros((crop_height, crop_width, 3), np.float32)
-    crop = mat[y:y + crop_height, x:x + crop_width]
-    h, w = crop.shape[:2]
-    ret[0:h, 0:w] = crop
-    if crop_size != (img_rows, img_cols):
-        ret = cv.resize(ret, dsize=(img_rows, img_cols), interpolation=cv.INTER_NEAREST)
     ret = ret.astype(np.uint8)
     return ret
 

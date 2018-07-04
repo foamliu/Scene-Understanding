@@ -1,9 +1,9 @@
 import keras.backend as K
-from keras.layers import Input, Conv2D, UpSampling2D, BatchNormalization, MaxPooling2D, Concatenate, \
-    Reshape
+from keras.layers import Input, Conv2D, UpSampling2D, BatchNormalization, MaxPooling2D, Concatenate, Reshape
 from keras.models import Model
-from keras.utils import plot_model
 from keras.regularizers import l2
+from keras.utils import plot_model
+
 from config import img_rows, img_cols, num_classes, kernel, weight_decay
 from custom_layers.unpooling_layer import Unpooling
 

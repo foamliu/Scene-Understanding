@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     for i in range(len(samples)):
         name = names[i]
-        image, image_size = get_image(name)
+        image = get_image(name)
         category = get_category(i)
         colorful_category = to_bgr(category)
         print('Start processing image: {}'.format(name))

@@ -21,15 +21,19 @@ if __name__ == '__main__':
 
     print(model.summary())
 
-    filename = '{}_names.txt'.format('valid')
-    with open(filename, 'r') as f:
+    with open('names.txt', 'r') as f:
         names = f.read().splitlines()
-    samples = random.sample(names, 10)
+
+    filename = 'valid_ids.txt'
+    with open(filename, 'r') as f:
+        ids = f.read().splitlines()
+        ids = list(map(int, ids))
+    samples = random.sample(ids, 10)
 
     for i in range(len(samples)):
-        name = samples[i]
+        name = names[i]
         image, image_size = get_image(name)
-        category = get_category(name)
+        category = get_category(i)
         colorful_category = to_bgr(category)
         print('Start processing image: {}'.format(name))
 

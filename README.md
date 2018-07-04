@@ -34,6 +34,10 @@ $ wget http://3dvision.princeton.edu/projects/2015/SUNrgbd/data/SUNRGBDtoolbox.z
 $ python pre-process.py
 ```
 
+像素分布：
+
+![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/dist.png)
+
 ### 训练
 ```bash
 $ python train.py
@@ -50,7 +54,7 @@ $ tensorboard --logdir path_to_current_dir/logs
 $ python demo.py
 ```
 
-图例
+图例：
 
 ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/legend.png)
 

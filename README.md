@@ -51,6 +51,7 @@ $ python demo.py
 ```
 
 图例
+
 ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/legend.png)
 
 输入 | 真实 | 输出 |

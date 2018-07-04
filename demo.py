@@ -12,7 +12,7 @@ from data_generator import to_bgr
 from model import build_model
 
 if __name__ == '__main__':
-    model_weights_path = 'models/model.05-8.3896.hdf5'
+    model_weights_path = 'models/model.04-10.9674.hdf5'
     model = build_model()
     model.load_weights(model_weights_path)
 

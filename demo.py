@@ -28,7 +28,7 @@ if __name__ == '__main__':
     samples = random.sample(ids, 10)
     print('samples: ' + str(samples))
 
-    for i in range(len(samples)):
+    for i in samples:
         name = names[i]
         image = get_image(name)
         category = get_category(i)

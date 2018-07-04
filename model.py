@@ -4,15 +4,15 @@ from keras.layers import Input, Conv2D, UpSampling2D, BatchNormalization, MaxPoo
 from keras.models import Model
 from keras.utils import plot_model
 
-from config import num_classes
+from config import img_rows, img_cols, num_classes
 from custom_layers.unpooling_layer import Unpooling
 
 
-def build_encoder_decoder():
+def build_model():
     kernel = 3
 
     # Encoder
-    input_tensor = Input(shape=(320, 320, 3))
+    input_tensor = Input(shape=(img_rows, img_cols, 3))
     x = Conv2D(64, (kernel, kernel), activation='relu', padding='same', name='conv1_1', kernel_initializer='he_normal',
                bias_initializer='zeros')(input_tensor)
     x = BatchNormalization()(x)
@@ -169,9 +169,9 @@ def build_encoder_decoder():
 
 
 if __name__ == '__main__':
-    encoder_decoder = build_encoder_decoder()
+    encoder_decoder = build_model()
     # input_layer = model.get_layer('input')
     print(encoder_decoder.summary())
-    plot_model(encoder_decoder, to_file='encoder_decoder.svg', show_layer_names=True, show_shapes=True)
+    plot_model(encoder_decoder, to_file='model.svg', show_layer_names=True, show_shapes=True)
 
     K.clear_session()

@@ -9,14 +9,14 @@ import numpy as np
 from config import num_classes
 from data_generator import get_image, get_category
 from data_generator import to_bgr
-from model import build_encoder_decoder
+from model import build_model
 
 if __name__ == '__main__':
     img_rows, img_cols = 320, 320
     channel = 3
 
     model_weights_path = 'models/model.16-3.1407.hdf5'
-    model = build_encoder_decoder()
+    model = build_model()
     model.load_weights(model_weights_path)
 
     print(model.summary())

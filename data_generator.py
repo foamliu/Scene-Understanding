@@ -68,7 +68,7 @@ class DataGenSequence(Sequence):
             category = get_category(id)
 
             image = cv.resize(image, (img_rows, img_cols), cv.INTER_CUBIC)
-            category = cv.resize(category, (img_rows, img_cols), cv.INTER_CUBIC)
+            category = cv.resize(category, (img_rows, img_cols), cv.INTER_NEAREST)
 
             if np.random.random_sample() > 0.5:
                 image = np.fliplr(image)

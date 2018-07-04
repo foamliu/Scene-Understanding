@@ -29,12 +29,12 @@ def get_category(id):
     return semantic
 
 
-def to_bgr(semantic):
-    h, w = semantic.shape[:2]
+def to_bgr(category):
+    h, w = category.shape[:2]
     ret = np.zeros((h, w, 3), np.float32)
     for r in range(h):
         for c in range(w):
-            color_id = semantic[r, c]
+            color_id = category[r, c]
             # print("color_id: " + str(color_id))
             ret[r, c, :] = colors[color_id]
     ret = ret.astype(np.uint8)
@@ -90,14 +90,9 @@ class DataGenSequence(Sequence):
             name = self.names[id]
             image = get_image(name)
             category = get_category(id)
-            image_size = image.shape[:2]
 
-            different_sizes = [(320, 320), (480, 480), (640, 640)]
-            crop_size = random.choice(different_sizes)
-
-            x, y = random_choice(image_size, crop_size)
-            image = safe_crop(image, x, y, crop_size)
-            category = safe_crop(category, x, y, crop_size)
+            image = cv.resize(image, (img_rows, img_cols), cv.INTER_CUBIC)
+            category = cv.resize(category, (img_rows, img_cols), cv.INTER_CUBIC)
 
             if np.random.random_sample() > 0.5:
                 image = np.fliplr(image)

@@ -10,6 +10,8 @@ num_train_samples = 8268
 # num_samples - num_train_samples
 num_valid_samples = 2067
 num_classes = 38
+kernel = 3
+weight_decay = 1e-2
 
 folder_metadata = 'data/SUNRGBDtoolbox/Metadata/'
 folder_2D_segmentation = 'annotation2Dfinal'

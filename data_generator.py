@@ -68,23 +68,26 @@ class DataGenSequence(Sequence):
     def __init__(self, usage):
         self.usage = usage
 
-        with open('{}_names.txt'.format(usage), 'r') as f:
+        with open('{}_ids.txt'.format(usage), 'r') as f:
+            ids = f.read().splitlines()
+            self.ids = list(map(int, ids))
+
+        with open('names.txt', 'r') as f:
             self.names = f.read().splitlines()
 
-        np.random.shuffle(self.names)
-
     def __len__(self):
-        return int(np.ceil(len(self.names) / float(batch_size)))
+        return int(np.ceil(len(self.ids) / float(batch_size)))
 
     def __getitem__(self, idx):
         i = idx * batch_size
 
-        length = min(batch_size, (len(self.names) - i))
+        length = min(batch_size, (len(self.ids) - i))
         batch_x = np.empty((length, img_rows, img_cols, 3), dtype=np.float32)
         batch_y = np.empty((length, img_rows, img_cols), dtype=np.int32)
 
         for i_batch in range(length):
-            name = self.names[i_batch]
+            id = self.ids[i]
+            name = self.names[id]
             image = get_image(name)
             category = get_category(id)
             image_size = image.shape[:2]
@@ -111,7 +114,7 @@ class DataGenSequence(Sequence):
         return batch_x, batch_y
 
     def on_epoch_end(self):
-        np.random.shuffle(self.names)
+        np.random.shuffle(self.ids)
 
 
 def train_gen():

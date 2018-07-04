@@ -34,6 +34,8 @@ if __name__ == '__main__':
         name = names[i]
         image = get_image(name)
         category = get_category(i)
+        image = cv.resize(image, (img_rows, img_cols), cv.INTER_CUBIC)
+        category = cv.resize(category, (img_rows, img_cols), cv.INTER_CUBIC)
         colorful_category = to_bgr(category)
         print('Start processing image: {}'.format(name))
 

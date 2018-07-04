@@ -12,7 +12,7 @@
 
 ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/dataset.png)
 
-按照 [instruction](http://3dvision.princeton.edu/projects/2015/SUNrgbd/) 下载 SUN RGB-D 数据集并放在 data 目录内。
+按照 [说明](http://3dvision.princeton.edu/projects/2015/SUNrgbd/) 下载 SUN RGB-D 数据集，放在 data 目录内。
 
 ```bash
 $ wget http://3dvision.princeton.edu/projects/2015/SUNrgbd/data/SUNRGBD.zip
@@ -29,7 +29,7 @@ $ wget http://3dvision.princeton.edu/projects/2015/SUNrgbd/data/SUNRGBDtoolbox.z
 
 ## 用法
 ### 数据预处理
-The dataset contains 10335 RGBD images of SUNRGBD V1, extract training images:
+该数据集包含SUNRGBD V1的10335个RGBD图像，执行下述命令提取训练图像：
 ```bash
 $ python pre-process.py
 ```
@@ -39,12 +39,12 @@ $ python pre-process.py
 $ python train.py
 ```
 
-如果想可视化训练过程，执行：
+如果想可视化训练过程，可执行：
 ```bash
 $ tensorboard --logdir path_to_current_dir/logs
 ```
 
-### Demo
+### 演示
 
 ```bash
 $ python demo.py
@@ -53,7 +53,7 @@ $ python demo.py
 图例
 ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/legend.png)
 
-Input | GT | Output |
+输入 | 真实 | 输出 |
 |---|---|---|
 |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/0_image.png)  | ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/0_gt.png) | ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/0_out.png)|
 |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/1_image.png)  | ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/1_gt.png) | ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/1_out.png)|

@@ -5,6 +5,7 @@ import keras.backend as K
 import numpy as np
 from tensorflow.python.client import device_lib
 
+from config import num_classes
 
 # Load the class prior factor that encourages rare classes
 prior_factor = np.load("data/prior_factor.npy")
@@ -12,9 +13,8 @@ prior_factor = prior_factor.astype(np.float32)
 
 
 def categorical_crossentropy(y_true, y_pred):
-    q = 313
-    y_true = K.reshape(y_true, (-1, q))
-    y_pred = K.reshape(y_pred, (-1, q))
+    y_true = K.reshape(y_true, (-1, num_classes))
+    y_pred = K.reshape(y_pred, (-1, num_classes))
 
     idx_max = K.argmax(y_true, axis=1)
     weights = K.gather(prior_factor, idx_max)

@@ -49,6 +49,6 @@ if __name__ == '__main__':
 
         cv.imwrite('images/{}_image.png'.format(i), image)
         cv.imwrite('images/{}_out.png'.format(i), out)
-        cv.imwrite('images/{}_semantic.png'.format(i), colorful_category)
+        cv.imwrite('images/{}_gt.png'.format(i), colorful_category)
 
     K.clear_session()

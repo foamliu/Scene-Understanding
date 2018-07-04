@@ -28,10 +28,11 @@ if __name__ == '__main__':
     samples = random.sample(ids, 10)
     print('samples: ' + str(samples))
 
-    for i in samples:
-        name = names[i]
+    for i in range(len(samples)):
+        id = samples[i]
+        name = names[id]
         image = get_image(name)
-        category = get_category(i)
+        category = get_category(id)
         image = cv.resize(image, (img_rows, img_cols), cv.INTER_CUBIC)
         category = cv.resize(category, (img_rows, img_cols), cv.INTER_NEAREST)
         colorful_category = to_bgr(category)

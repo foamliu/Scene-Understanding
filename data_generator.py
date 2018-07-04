@@ -138,7 +138,7 @@ def split_data():
     num_valid_samples = num_samples - num_train_samples
     print('num_valid_samples: ' + str(num_valid_samples))
     valid_ids = random.sample(range(num_train_samples), num_valid_samples)
-    train_ids = [n for n in range(num_train_samples) if n not in valid_ids]
+    train_ids = [str(n) for n in range(num_train_samples) if n not in valid_ids]
     shuffle(valid_ids)
     shuffle(train_ids)
 

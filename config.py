@@ -2,7 +2,7 @@ import hdf5storage
 
 img_rows, img_cols = 256, 256
 channel = 3
-batch_size = 32
+batch_size = 16
 epochs = 1000
 patience = 50
 num_samples = 10335

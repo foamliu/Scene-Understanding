@@ -1,10 +1,9 @@
 import keras.backend as K
 from keras.layers import Input, Conv2D, UpSampling2D, BatchNormalization, MaxPooling2D, Concatenate, Reshape
 from keras.models import Model
-from keras.regularizers import l2
 from keras.utils import plot_model
 
-from config import img_rows, img_cols, num_classes, kernel, weight_decay
+from config import img_rows, img_cols, num_classes, kernel
 from custom_layers.unpooling_layer import Unpooling
 
 
@@ -12,55 +11,55 @@ def build_model():
     # Encoder
     input_tensor = Input(shape=(img_rows, img_cols, 3))
     x = Conv2D(64, (kernel, kernel), activation='relu', padding='same', name='conv1_1', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(input_tensor)
+               bias_initializer='zeros')(input_tensor)
     x = BatchNormalization()(x)
     x = Conv2D(64, (kernel, kernel), activation='relu', padding='same', name='conv1_2', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     orig_1 = x
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     x = Conv2D(128, (kernel, kernel), activation='relu', padding='same', name='conv2_1', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(128, (kernel, kernel), activation='relu', padding='same', name='conv2_2', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     orig_2 = x
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     x = Conv2D(256, (kernel, kernel), activation='relu', padding='same', name='conv3_1', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(256, (kernel, kernel), activation='relu', padding='same', name='conv3_2', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(256, (kernel, kernel), activation='relu', padding='same', name='conv3_3', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     orig_3 = x
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='conv4_1', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='conv4_2', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='conv4_3', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     orig_4 = x
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
 
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='conv5_1', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='conv5_2', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='conv5_3', kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     orig_5 = x
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
@@ -75,15 +74,15 @@ def build_model():
     x = Unpooling()(together)
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='deconv5_1',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='deconv5_2',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='deconv5_3',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
 
     x = UpSampling2D(size=(2, 2))(x)
@@ -95,15 +94,15 @@ def build_model():
     x = Unpooling()(together)
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='deconv4_1',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(512, (kernel, kernel), activation='relu', padding='same', name='deconv4_2',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(256, (kernel, kernel), activation='relu', padding='same', name='deconv4_3',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
 
     x = UpSampling2D(size=(2, 2))(x)
@@ -115,15 +114,15 @@ def build_model():
     x = Unpooling()(together)
     x = Conv2D(256, (kernel, kernel), activation='relu', padding='same', name='deconv3_1',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(256, (kernel, kernel), activation='relu', padding='same', name='deconv3_2',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(128, (kernel, kernel), activation='relu', padding='same', name='deconv3_3',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
 
     x = UpSampling2D(size=(2, 2))(x)
@@ -135,11 +134,11 @@ def build_model():
     x = Unpooling()(together)
     x = Conv2D(128, (kernel, kernel), activation='relu', padding='same', name='deconv2_1',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(64, (kernel, kernel), activation='relu', padding='same', name='deconv2_2',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
 
     x = UpSampling2D(size=(2, 2))(x)
@@ -151,16 +150,16 @@ def build_model():
     x = Unpooling()(together)
     x = Conv2D(64, (kernel, kernel), activation='relu', padding='same', name='deconv1_1',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
     x = Conv2D(64, (kernel, kernel), activation='relu', padding='same', name='deconv1_2',
                kernel_initializer='he_normal',
-               kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+               bias_initializer='zeros')(x)
     x = BatchNormalization()(x)
 
     outputs = Conv2D(num_classes, (1, 1), activation='softmax', padding='valid', name='pred',
                      kernel_initializer='he_normal',
-                     kernel_regularizer=l2(weight_decay), bias_initializer='zeros')(x)
+                     bias_initializer='zeros')(x)
 
     model = Model(inputs=input_tensor, outputs=outputs, name="SegNet")
     return model

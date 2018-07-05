@@ -10,7 +10,7 @@ from keras.utils import to_categorical
 
 from config import folder_metadata, folder_rgb_image
 from config import img_rows, img_cols, batch_size, colors
-from config import seg_path, num_classes
+from config import seg_path, num_classes, crop_size
 
 
 def get_image(name):
@@ -36,6 +36,29 @@ def to_bgr(category):
             color_id = category[r, c]
             # print("color_id: " + str(color_id))
             ret[r, c, :] = colors[color_id]
+    ret = ret.astype(np.uint8)
+    return ret
+
+
+def random_choice(image_size):
+    height, width = image_size
+    crop_height, crop_width = crop_size
+    x = random.randint(0, max(0, width - crop_width))
+    y = random.randint(0, max(0, height - crop_height))
+    return x, y
+
+
+def safe_crop(mat, x, y):
+    crop_height, crop_width = crop_size
+    if len(mat.shape) == 2:
+        ret = np.zeros((crop_height, crop_width), np.float32)
+    else:
+        ret = np.zeros((crop_height, crop_width, 3), np.float32)
+    crop = mat[y:y + crop_height, x:x + crop_width]
+    h, w = crop.shape[:2]
+    ret[0:h, 0:w] = crop
+    if crop_size != (img_rows, img_cols):
+        ret = cv.resize(ret, dsize=(img_rows, img_cols), interpolation=cv.INTER_NEAREST)
     ret = ret.astype(np.uint8)
     return ret
 
@@ -66,9 +89,11 @@ class DataGenSequence(Sequence):
             name = self.names[id]
             image = get_image(name)
             category = get_category(id)
+            image_size = image.shape[:2]
 
-            image = cv.resize(image, (img_rows, img_cols), cv.INTER_CUBIC)
-            category = cv.resize(category, (img_rows, img_cols), cv.INTER_NEAREST)
+            x, y = random_choice(image_size)
+            image = safe_crop(image, x, y)
+            category = safe_crop(category, x, y)
 
             if np.random.random_sample() > 0.5:
                 image = np.fliplr(image)

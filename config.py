@@ -67,3 +67,5 @@ objectColors = ['#000000', '#2523ad', '#066ff1', '#abebbb', '#64071f', '#e6840a'
                 '#dcae65', '#79dd07', '#ce6f38', '#7143a4', '#61632d', '#80ea5b', '#27a355', '#09cb29', '#5f989e',
                 '#c08035', '#6a1446']
 colors = [[int(c[1:3], 16), int(c[3:5], 16), int(c[5:7], 16)] for c in objectColors]
+
+crop_size = (512, 521)

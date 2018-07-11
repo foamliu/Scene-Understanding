@@ -43,21 +43,19 @@ def to_bgr(category):
 
 def random_choice(image_size):
     height, width = image_size
-    crop_height, crop_width = crop_size
-    x = random.randint(0, max(0, width - crop_width))
-    y = random.randint(0, max(0, height - crop_height))
+    x = random.randint(0, max(0, width - crop_size))
+    y = random.randint(0, max(0, height - crop_size))
     return x, y
 
 
 def safe_crop(mat, x, y):
-    crop_height, crop_width = crop_size
     if len(mat.shape) == 2:
-        ret = np.zeros((crop_height, crop_width), np.float32)
+        ret = np.zeros((crop_size, crop_size), np.float32)
         interpolation = cv.INTER_NEAREST
     else:
-        ret = np.zeros((crop_height, crop_width, 3), np.float32)
+        ret = np.zeros((crop_size, crop_size, 3), np.float32)
         interpolation = cv.INTER_CUBIC
-    crop = mat[y:y + crop_height, x:x + crop_width]
+    crop = mat[y:y + crop_size, x:x + crop_size]
     h, w = crop.shape[:2]
     ret[0:h, 0:w] = crop
     if crop_size != (img_rows, img_cols):

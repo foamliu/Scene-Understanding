@@ -5,6 +5,7 @@ import random
 import cv2 as cv
 import keras.backend as K
 import numpy as np
+from keras.applications.vgg16 import preprocess_input
 
 from config import img_rows, img_cols, num_classes
 from data_generator import get_image, get_category
@@ -38,8 +39,10 @@ if __name__ == '__main__':
         colorful_category = to_bgr(category)
         print('Start processing image: {}'.format(name))
 
+        image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         x_test = np.empty((1, img_rows, img_cols, 3), dtype=np.float32)
-        x_test[0, :, :, 0:3] = image / 255.
+        x_test[0, :, :, 0:3] = image
+        x_test = preprocess_input(x_test)
 
         out = model.predict(x_test)
         out = np.reshape(out, (img_rows, img_cols, num_classes))

@@ -5,6 +5,7 @@ from random import shuffle
 import cv2 as cv
 import hdf5storage
 import numpy as np
+from keras.applications.vgg16 import preprocess_input
 from keras.utils import Sequence
 from keras.utils import to_categorical
 
@@ -87,7 +88,7 @@ class DataGenSequence(Sequence):
         batch_y = np.empty((length, img_rows, img_cols, num_classes), dtype=np.int32)
 
         for i_batch in range(length):
-            id = self.ids[i]
+            id = self.ids[i + i_batch]
             name = self.names[id]
             image = get_image(name)
             category = get_category(id)
@@ -101,13 +102,12 @@ class DataGenSequence(Sequence):
                 image = np.fliplr(image)
                 category = np.fliplr(category)
 
-            x = image / 255.
-            y = category
+            image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
-            batch_x[i_batch, :, :, 0:3] = x
-            batch_y[i_batch, :, :] = to_categorical(y, num_classes)
+            batch_x[i_batch, :, :, 0:3] = image
+            batch_y[i_batch, :, :] = to_categorical(category, num_classes)
 
-            i += 1
+        batch_x = preprocess_input(batch_x)
 
         return batch_x, batch_y
 

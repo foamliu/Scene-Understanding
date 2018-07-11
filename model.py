@@ -1,5 +1,5 @@
 import keras.backend as K
-from keras.applications.vgg19 import VGG19
+from keras.applications.vgg16 import VGG16
 from keras.layers import Conv2D, UpSampling2D, BatchNormalization
 from keras.models import Model
 from keras.utils import plot_model
@@ -9,8 +9,8 @@ from config import img_rows, img_cols, num_classes, channel, kernel
 
 def build_model():
     # Encoder
-    image_encoder = VGG19(input_shape=(img_rows, img_cols, channel), include_top=False, weights='imagenet',
-                         pooling='None')
+    image_encoder = VGG16(input_shape=(img_rows, img_cols, channel), include_top=False, weights='imagenet',
+                          pooling='None')
     # for layer in image_encoder.layers:
     #    layer.trainable = False
     input_tensor = image_encoder.inputs

@@ -48,6 +48,8 @@ $ python train.py
 $ tensorboard --logdir path_to_current_dir/logs
 ```
 
+![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/learning.png)
+
 ### 演示
 
 下载 [预训练模型](https://github.com/foamliu/Semantic-Segmentation/releases/download/v1.0/model.161-3.7725.hdf5) 放在 models 目录，然后执行:

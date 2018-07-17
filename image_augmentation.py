@@ -29,8 +29,8 @@ if __name__ == '__main__':
         iaa.Affine(
             scale={"x": (0.8, 1.2), "y": (0.8, 1.2)},
             translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)},
-            rotate=(-45, 45),
-            shear=(-16, 16),
+            rotate=(-25, 25),
+            shear=(-8, 8),
             order=[0]
         )
     ])
@@ -41,7 +41,7 @@ if __name__ == '__main__':
         iaa.ContrastNormalization((0.75, 1.5)),
         iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05 * 255), per_channel=0.5),
         iaa.Multiply((0.8, 1.2), per_channel=0.2),
-        
+
     ], random_order=True)
 
     length = 10

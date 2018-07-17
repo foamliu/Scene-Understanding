@@ -22,12 +22,6 @@ if __name__ == '__main__':
 
     image = cv.resize(image, (img_rows, img_cols), cv.INTER_CUBIC)
     category = cv.resize(category, (img_rows, img_cols), cv.INTER_NEAREST)
-    category_bgr = to_bgr(category)
-
-    images = np.zeros((1, img_rows, img_cols, 3))
-    images[0] = image
-    categories = np.zeros((1, img_rows, img_cols, 1))
-    categories[0, :, :, 0] = category
 
     seq = iaa.Sequential([
         iaa.Crop(px=(0, 16)),
@@ -35,10 +29,17 @@ if __name__ == '__main__':
     ])
     seq_det = seq.to_deterministic()
 
+    images = np.zeros((1, img_rows, img_cols, 3))
+    images[0] = image
+    categories = np.zeros((1, img_rows, img_cols, 1))
+    categories[0, :, :, 0] = category
     images_aug = seq_det.augment_images(images)
     categories_aug = seq_det.augment_images(categories)
 
-    cv.imshow('image', images_aug[0])
-    cv.imshow('category_bgr', categories_aug[0])
+    image = images_aug[0]
+    category_bgr = to_bgr(categories_aug[0])
+
+    cv.imshow('image', image)
+    cv.imshow('category_bgr', category_bgr)
     cv.waitKey(0)
     cv.destroyAllWindows()

@@ -39,16 +39,16 @@ if __name__ == '__main__':
 
     images = np.zeros((1, img_rows, img_cols, 3), np.uint8)
     images[0] = image
-    categories = np.zeros((1, img_rows, img_cols, 1))
+    categories = np.zeros((1, img_rows, img_cols, 1), np.uint8)
     categories[0, :, :, 0] = category
     images_aug = seq_det.augment_images(images)
     categories_aug = seq_det.augment_images(categories)
 
     image = images_aug[0]
-    print(image)
-    # category_bgr = to_bgr(categories_aug[0])
+    # print(image)
+    category_bgr = to_bgr(categories_aug[0])
 
     cv.imshow('image', image)
-    # cv.imshow('category_bgr', category_bgr)
+    cv.imshow('category_bgr', category_bgr)
     cv.waitKey(0)
     cv.destroyAllWindows()

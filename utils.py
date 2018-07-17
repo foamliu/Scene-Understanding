@@ -9,7 +9,7 @@ from config import num_classes
 
 prob = np.load('data/prior_prob.npy')
 median = np.median(prob)
-factor = median / prob
+factor = (median / prob).astype(np.float32)
 
 
 def categorical_crossentropy_with_class_rebal(y_true, y_pred):

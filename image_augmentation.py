@@ -37,18 +37,19 @@ if __name__ == '__main__':
     ])
     seq_det = seq.to_deterministic()
 
-    images = np.zeros((1, img_rows, img_cols, 3), np.uint8)
-    images[0] = image
-    categories = np.zeros((1, img_rows, img_cols), np.uint8)
-    categories[0] = category
+    length = 10
+    images = np.zeros((length, img_rows, img_cols, 3), np.uint8)
+    categories = np.zeros((length, img_rows, img_cols), np.uint8)
+    for i in range(length):
+        images[i] = image.copy()
+        categories[i] = category.copy()
+
     images_aug = seq_det.augment_images(images)
     categories_aug = seq_det.augment_images(categories)
-    print(categories_aug[0])
-    image = images_aug[0]
-    # print(image)
-    category_bgr = to_bgr(categories_aug[0])
 
-    cv.imshow('image', image)
-    cv.imshow('category_bgr', category_bgr)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    for i in range(length):
+        image = images_aug[i]
+        category_bgr = to_bgr(categories_aug[i])
+        cv.imwrite('images/{}_image_aug.png'.format(i), image)
+        cv.imwrite('images/{}_category_aug.png'.format(i), category_bgr)
+

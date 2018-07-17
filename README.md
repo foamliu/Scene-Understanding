@@ -38,6 +38,15 @@ $ python pre-process.py
 
 ![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/dist.png)
 
+### 数据集增强
+图片 | 分割 | 图片 | 分割 |
+|---|---|---|---|
+|![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/0_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/0_category_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/1_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/1_category_aug.png) |
+|![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/2_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/2_category_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/3_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/3_category_aug.png) |
+|![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/4_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/4_category_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/5_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/5_category_aug.png) |
+|![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/6_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/6_category_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/7_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/7_category_aug.png) |
+|![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/8_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/8_category_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/9_image_aug.png) |![image](https://github.com/foamliu/Semantic-Segmentation/raw/master/images/9_category_aug.png) |
+
 ### 训练
 ```bash
 $ python train.py

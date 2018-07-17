@@ -41,13 +41,6 @@ def to_bgr(category):
     return ret
 
 
-def random_choice(image_size):
-    height, width = image_size
-    x = random.randint(0, max(0, width - crop_size))
-    y = random.randint(0, max(0, height - crop_size))
-    return x, y
-
-
 def safe_crop(mat, x, y):
     if len(mat.shape) == 2:
         ret = np.zeros((crop_size, crop_size), np.float32)
@@ -62,6 +55,15 @@ def safe_crop(mat, x, y):
         ret = cv.resize(ret, dsize=(img_rows, img_cols), interpolation=interpolation)
     ret = ret.astype(np.uint8)
     return ret
+
+
+def random_crop(image, category):
+    height, width = image.shape[:2]
+    x = random.randint(0, max(0, width - crop_size))
+    y = random.randint(0, max(0, height - crop_size))
+    image = safe_crop(image, x, y)
+    category = safe_crop(category, x, y)
+    return image, category
 
 
 class DataGenSequence(Sequence):
@@ -90,11 +92,7 @@ class DataGenSequence(Sequence):
             name = self.names[id]
             image = get_image(name)
             category = get_category(id)
-            image_size = image.shape[:2]
-
-            x, y = random_choice(image_size)
-            image = safe_crop(image, x, y)
-            category = safe_crop(category, x, y)
+            image, category = random_crop(image, category)
 
             if np.random.random_sample() > 0.5:
                 image = np.fliplr(image)

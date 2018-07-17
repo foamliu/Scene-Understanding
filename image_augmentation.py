@@ -23,9 +23,17 @@ if __name__ == '__main__':
     image = cv.resize(image, (img_rows, img_cols), cv.INTER_CUBIC)
     category = cv.resize(category, (img_rows, img_cols), cv.INTER_NEAREST)
 
+    sometimes = lambda aug: iaa.Sometimes(0.5, aug)
     seq = iaa.Sequential([
-        iaa.Crop(px=(0, 16)),
-        iaa.Fliplr(0.5)
+        iaa.Fliplr(0.5),
+        sometimes(iaa.Affine(
+            scale={"x": (0.8, 1.2), "y": (0.8, 1.2)},
+            translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)},
+            rotate=(-45, 45),
+            shear=(-16, 16),
+            order=[0],
+            cval=(0, 255)
+        ))
     ])
     seq_det = seq.to_deterministic()
 

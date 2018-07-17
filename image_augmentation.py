@@ -39,11 +39,11 @@ if __name__ == '__main__':
 
     images = np.zeros((1, img_rows, img_cols, 3), np.uint8)
     images[0] = image
-    categories = np.zeros((1, img_rows, img_cols, 1), np.uint8)
-    categories[0, :, :, 0] = category
+    categories = np.zeros((1, img_rows, img_cols), np.uint8)
+    categories[0] = category
     images_aug = seq_det.augment_images(images)
     categories_aug = seq_det.augment_images(categories)
-
+    print(categories_aug[0])
     image = images_aug[0]
     # print(image)
     category_bgr = to_bgr(categories_aug[0])

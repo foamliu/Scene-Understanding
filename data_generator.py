@@ -92,7 +92,8 @@ class DataGenSequence(Sequence):
             name = self.names[id]
             image = get_image(name)
             category = get_category(id)
-            image, category = random_crop(image, category)
+            image = cv.resize(image, (img_rows, img_cols), cv.INTER_NEAREST)
+            category = cv.resize(category, (img_rows, img_cols), cv.INTER_NEAREST)
 
             if np.random.random_sample() > 0.5:
                 image = np.fliplr(image)

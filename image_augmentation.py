@@ -20,7 +20,7 @@ if __name__ == '__main__':
     image = get_image(name)
     category = get_category(id)
 
-    image = cv.resize(image, (img_rows, img_cols), cv.INTER_CUBIC)
+    image = cv.resize(image, (img_rows, img_cols), cv.INTER_NEAREST)
     category = cv.resize(category, (img_rows, img_cols), cv.INTER_NEAREST)
 
     sometimes = lambda aug: iaa.Sometimes(0.5, aug)

@@ -25,6 +25,7 @@ if __name__ == '__main__':
 
     seq = iaa.Sequential([
         iaa.Fliplr(0.5),
+        iaa.Crop(percent=(0, 0.1)),
         iaa.Affine(
             scale={"x": (0.8, 1.2), "y": (0.8, 1.2)},
             translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)},
@@ -35,6 +36,14 @@ if __name__ == '__main__':
     ])
     seq_det = seq.to_deterministic()
 
+    seq_img = iaa.Sequential([
+        iaa.GaussianBlur(sigma=(0, 0.5)),
+        iaa.ContrastNormalization((0.75, 1.5)),
+        iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05 * 255), per_channel=0.5),
+        iaa.Multiply((0.8, 1.2), per_channel=0.2),
+        
+    ], random_order=True)
+
     length = 10
     images = np.zeros((length, img_rows, img_cols, 3), np.uint8)
     categories = np.zeros((length, img_rows, img_cols), np.uint8)
@@ -42,7 +51,8 @@ if __name__ == '__main__':
         images[i] = image.copy()
         categories[i] = category.copy()
 
-    images_aug = seq_det.augment_images(images)
+    images_aug = seq_img.augment_images(images)
+    images_aug = seq_det.augment_images(images_aug)
     categories_aug = seq_det.augment_images(categories)
 
     for i in range(length):

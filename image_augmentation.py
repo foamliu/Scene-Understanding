@@ -26,13 +26,12 @@ if __name__ == '__main__':
 
     images = np.zeros((1, img_rows, img_cols, 3))
     images[0] = image
-    categories = np.zeros((1, img_rows, img_cols))
-    categories[0] = category
+    categories = np.zeros((1, img_rows, img_cols, 1))
+    categories[0, :, :, 0] = category
 
     seq = iaa.Sequential([
-        iaa.Crop(px=(0, 16)),  # crop images from each side by 0 to 16px (randomly chosen)
-        iaa.Fliplr(0.5),  # horizontally flip 50% of the images
-        iaa.GaussianBlur(sigma=(0, 3.0))  # blur images with a sigma of 0 to 3.0
+        iaa.Crop(px=(0, 16)),
+        iaa.Fliplr(0.5)
     ])
     seq_det = seq.to_deterministic()
 

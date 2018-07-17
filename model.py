@@ -6,6 +6,9 @@ from custom_layers.unpooling_layer import Unpooling
 from custom_layers.normalization import LRN2D
 from config import img_rows, img_cols, num_classes, channel, kernel
 
+import os
+os.environ["MKL_THREADING_LAYER"] = "GNU"
+
 
 def build_model():
     # Encoder

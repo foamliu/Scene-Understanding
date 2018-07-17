@@ -45,9 +45,9 @@ if __name__ == '__main__':
     categories_aug = seq_det.augment_images(categories)
 
     image = images_aug[0]
-    category_bgr = to_bgr(categories_aug[0])
+    # category_bgr = to_bgr(categories_aug[0])
 
     cv.imshow('image', image)
-    cv.imshow('category_bgr', category_bgr)
+    # cv.imshow('category_bgr', category_bgr)
     cv.waitKey(0)
     cv.destroyAllWindows()

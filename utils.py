@@ -7,17 +7,17 @@ from tensorflow.python.client import device_lib
 
 from config import num_classes
 
-# Load the class prior factor that encourages rare classes
-prior_factor = np.load("data/prior_factor.npy")
-prior_factor = prior_factor.astype(np.float32)
+prob = np.load('data/prior_prob.npy')
+median = np.median(prob)
+factor = median / prob
 
 
-def categorical_crossentropy(y_true, y_pred):
+def categorical_crossentropy_with_class_rebal(y_true, y_pred):
     y_true = K.reshape(y_true, (-1, num_classes))
     y_pred = K.reshape(y_pred, (-1, num_classes))
 
     idx_max = K.argmax(y_true, axis=1)
-    weights = K.gather(prior_factor, idx_max)
+    weights = K.gather(factor, idx_max)
     weights = K.reshape(weights, (-1, 1))
 
     # multiply y_true by weights

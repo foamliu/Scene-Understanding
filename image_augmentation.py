@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     for i in range(length):
         image = images_aug[i]
-        category_bgr = to_bgr(categories_aug[i])
+        category_bgr = to_bgr(categories_aug[i].astype(np.uint8))
         cv.imwrite('images/{}_image_aug.png'.format(i), image)
         cv.imwrite('images/{}_category_aug.png'.format(i), category_bgr)
 

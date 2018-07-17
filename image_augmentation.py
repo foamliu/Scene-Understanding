@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     images = np.zeros((1, img_rows, img_cols, 3))
     images[0] = image
-    categories = np.zeros((1, img_rows, img_cols, 1))
+    categories = np.zeros((1, img_rows, img_cols))
     categories[0] = category
 
     seq = iaa.Sequential([

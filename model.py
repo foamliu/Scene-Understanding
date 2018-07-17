@@ -1,5 +1,5 @@
 import keras.backend as K
-from keras.layers import Input, ZeroPadding2D, Conv2D, UpSampling2D, BatchNormalization, MaxPooling2D, Reshape, Concatenate
+from keras.layers import Input, ZeroPadding2D, Conv2D, UpSampling2D, BatchNormalization, MaxPooling2D, Reshape, Concatenate, Flatten, Dense, Dropout
 from keras.models import Model
 from keras.utils import plot_model
 from custom_layers.unpooling_layer import Unpooling
@@ -12,8 +12,8 @@ os.environ["MKL_THREADING_LAYER"] = "GNU"
 
 def build_model():
     # Encoder
-    input_tensor = Input(shape=(img_rows, img_cols, channel))
-    x = LRN2D()(input_tensor)
+    img_input = Input(shape=(img_rows, img_cols, channel))
+    x = LRN2D()(img_input)
     x = ZeroPadding2D((1, 1))(x)
     x = Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', name='conv1_1')(x)
     x = ZeroPadding2D((1, 1))(x)
@@ -54,6 +54,19 @@ def build_model():
     x = Conv2D(512, (3, 3), activation='relu', kernel_initializer='he_normal', name='conv5_3')(x)
     orig_5 = x
     x = MaxPooling2D((2, 2), strides=(2, 2))(x)
+
+    # Add Fully Connected Layer
+    x_fc = Flatten()(x)
+    x_fc = Dense(4096, activation='relu')(x_fc)
+    x_fc = Dropout(0.5)(x_fc)
+    x_fc = Dense(4096, activation='relu')(x_fc)
+    x_fc = Dropout(0.5)(x_fc)
+    x_fc = Dense(1000, activation='softmax')(x_fc)
+    model = Model(img_input, x_fc)
+
+    # Loads ImageNet pre-trained data
+    weights_path = 'models/vgg16_weights_tf_dim_ordering_tf_kernels.h5'
+    model.load_weights(weights_path, by_name=True)
 
     # Decoder
     x = UpSampling2D(size=(2, 2))(x)
@@ -138,7 +151,7 @@ def build_model():
     outputs = Conv2D(num_classes, (1, 1), activation='softmax', padding='valid', name='pred',
                      kernel_initializer='he_normal')(x)
 
-    model = Model(inputs=input_tensor, outputs=outputs, name="SegNet")
+    model = Model(inputs=img_input, outputs=outputs, name="SegNet")
     return model
 
 

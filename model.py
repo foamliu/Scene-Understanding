@@ -13,7 +13,7 @@ os.environ["MKL_THREADING_LAYER"] = "GNU"
 def build_model():
     # Encoder
     img_input = Input(shape=(img_rows, img_cols, channel))
-    x = LRN2D()(img_input)
+    # x = LRN2D()(img_input)
     x = ZeroPadding2D((1, 1))(x)
     x = Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', name='conv1_1')(x)
     x = ZeroPadding2D((1, 1))(x)

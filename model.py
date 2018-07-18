@@ -1,19 +1,17 @@
 import keras.backend as K
-from keras.layers import Input, ZeroPadding2D, Conv2D, UpSampling2D, BatchNormalization, MaxPooling2D, Reshape, Concatenate, Flatten, Dense, Dropout
+from keras.layers import Input, ZeroPadding2D, Conv2D, UpSampling2D, BatchNormalization, MaxPooling2D, Reshape, \
+    Concatenate, Flatten, Dense, Dropout
 from keras.models import Model
 from keras.utils import plot_model
-from custom_layers.unpooling_layer import Unpooling
-from custom_layers.normalization import LRN2D
-from config import img_rows, img_cols, num_classes, channel, kernel
 
-import os
-os.environ["MKL_THREADING_LAYER"] = "GNU"
+from config import img_rows, img_cols, num_classes, channel, kernel
+from custom_layers.normalization import LRN2D
+from custom_layers.unpooling_layer import Unpooling
 
 
 def build_model():
     # Encoder
     img_input = Input(shape=(img_rows, img_cols, channel))
-    # x = LRN2D()(img_input)
     x = ZeroPadding2D((1, 1))(img_input)
     x = Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_normal', name='conv1_1')(x)
     x = ZeroPadding2D((1, 1))(x)

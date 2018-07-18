@@ -35,7 +35,7 @@ class DataGenSequence(Sequence):
 
         length = min(batch_size, (len(self.ids) - i))
         X = np.empty((length, img_rows, img_cols, 3), dtype=np.float32)
-        batch_y = np.empty((length, img_rows, img_cols), dtype=np.int32)
+        batch_y = np.empty((length, img_rows, img_cols), dtype=np.uint8)
         Y = np.empty((length, img_rows, img_cols, num_classes), dtype=np.float32)
 
         for i_batch in range(length):
@@ -48,13 +48,14 @@ class DataGenSequence(Sequence):
 
             image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
-            X[i_batch, :, :, 0:3] = image
-            batch_y[i_batch, :, :] = category
+            X[i_batch] = image
+            batch_y[i_batch] = category
 
         X = seq_img.augment_images(X)
         X = seq_det.augment_images(X)
         X = preprocess_input(X)
 
+        print(batch_y)
         batch_y = seq_det.augment_images(batch_y)
 
         for i_batch in range(length):

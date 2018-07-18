@@ -12,8 +12,7 @@ from keras.utils import to_categorical
 from config import folder_metadata
 from config import img_rows, img_cols, batch_size
 from config import num_classes
-from image_augmentation import seq_det, seq_img
-from utils import get_image, get_category
+from utils import get_image, get_category, random_crop
 
 
 class DataGenSequence(Sequence):
@@ -35,7 +34,6 @@ class DataGenSequence(Sequence):
 
         length = min(batch_size, (len(self.ids) - i))
         X = np.empty((length, img_rows, img_cols, 3), dtype=np.float32)
-        batch_y = np.empty((length, img_rows, img_cols), dtype=np.uint8)
         Y = np.empty((length, img_rows, img_cols, num_classes), dtype=np.float32)
 
         for i_batch in range(length):
@@ -43,22 +41,14 @@ class DataGenSequence(Sequence):
             name = self.names[id]
             image = get_image(name)
             category = get_category(id)
-            image = cv.resize(image, (img_rows, img_cols), cv.INTER_NEAREST)
-            category = cv.resize(category, (img_rows, img_cols), cv.INTER_NEAREST)
+            image, category = random_crop(image, category)
 
             image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
             X[i_batch] = image
-            batch_y[i_batch] = category
+            Y[i_batch] = to_categorical(category, num_classes)
 
-        X = seq_img.augment_images(X)
-        X = seq_det.augment_images(X)
         X = preprocess_input(X)
-
-        batch_y = seq_det.augment_images(batch_y)
-
-        for i_batch in range(length):
-            Y[i_batch] = to_categorical(batch_y[i_batch], num_classes)
 
         return X, Y
 

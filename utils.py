@@ -59,7 +59,6 @@ def get_image(name):
 
 def get_category(id):
     filename = os.path.join(seg_path, '{}.png'.format(id))
-    print(filename)
     category = cv.imread(filename, 0)
     return category
 

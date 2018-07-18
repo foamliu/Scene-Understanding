@@ -55,7 +55,6 @@ class DataGenSequence(Sequence):
         X = seq_det.augment_images(X)
         X = preprocess_input(X)
 
-        print(batch_y)
         batch_y = seq_det.augment_images(batch_y)
 
         for i_batch in range(length):

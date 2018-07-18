@@ -6,7 +6,7 @@ from imgaug import augmenters as iaa
 from tqdm import tqdm
 
 from config import img_rows, img_cols
-from data_generator import get_image, get_category, to_bgr
+from utils import get_image, get_category, to_bgr
 
 seq = iaa.Sequential([
     iaa.Fliplr(0.5),

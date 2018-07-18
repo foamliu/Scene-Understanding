@@ -3,6 +3,7 @@ import random
 import cv2 as cv
 import numpy as np
 from imgaug import augmenters as iaa
+from tqdm import tqdm
 
 from config import img_rows, img_cols
 from data_generator import get_image, get_category, to_bgr
@@ -10,7 +11,7 @@ from data_generator import get_image, get_category, to_bgr
 seq = iaa.Sequential([
     iaa.Fliplr(0.5),
     iaa.CropAndPad(
-        percent=(0.25, 0.25),
+        percent=(-0.25, 0.25),
         pad_mode=["wrap"],
     ),
     iaa.Affine(
@@ -51,7 +52,7 @@ if __name__ == '__main__':
     length = 10
     images = np.zeros((length, img_rows, img_cols, 3), np.uint8)
     categories = np.zeros((length, img_rows, img_cols), np.uint8)
-    for i in range(length):
+    for i in tqdm(range(length)):
         images[i] = image.copy()
         categories[i] = category.copy()
 

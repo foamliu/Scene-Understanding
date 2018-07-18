@@ -5,7 +5,6 @@ from keras.models import Model
 from keras.utils import plot_model
 
 from config import img_rows, img_cols, num_classes, channel, kernel
-from custom_layers.normalization import LRN2D
 from custom_layers.unpooling_layer import Unpooling
 
 

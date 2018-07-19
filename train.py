@@ -23,7 +23,7 @@ if __name__ == '__main__':
     model_names = checkpoint_models_path + 'model.{epoch:02d}-{val_loss:.4f}.hdf5'
     model_checkpoint = ModelCheckpoint(model_names, monitor='val_loss', verbose=1, save_best_only=True)
     early_stop = EarlyStopping('val_loss', patience=patience)
-    reduce_lr = ReduceLROnPlateau('val_loss', factor=0.1, patience=int(patience / 4), verbose=1)
+    reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 4), verbose=1)
 
 
     class MyCbk(keras.callbacks.Callback):
@@ -52,13 +52,13 @@ if __name__ == '__main__':
         if pretrained_path is not None:
             new_model.load_weights(pretrained_path)
 
-    sgd = keras.optimizers.SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5.)
+    sgd = keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5.)
     new_model.compile(optimizer=sgd, loss=categorical_crossentropy_with_class_rebal, metrics=['accuracy'])
 
     print(new_model.summary())
 
     # Final callbacks
-    callbacks = [tensor_board, model_checkpoint]
+    callbacks = [tensor_board, model_checkpoint, reduce_lr, early_stop]
 
     # Start Fine-tuning
     new_model.fit_generator(train_gen(),

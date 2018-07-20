@@ -8,12 +8,11 @@ import numpy as np
 from keras.applications.vgg16 import preprocess_input
 
 from config import img_rows, img_cols, num_classes
-from data_generator import get_image, get_category
-from data_generator import to_bgr
 from model import build_model
+from utils import get_image, get_category, random_crop, to_bgr
 
 if __name__ == '__main__':
-    model_weights_path = 'models/model.161-3.7725.hdf5'
+    model_weights_path = 'models/model.81-3.5244.hdf5'
     model = build_model()
     model.load_weights(model_weights_path)
 
@@ -34,12 +33,12 @@ if __name__ == '__main__':
         name = names[id]
         image = get_image(name)
         category = get_category(id)
-        image = cv.resize(image, (img_rows, img_cols), cv.INTER_CUBIC)
-        category = cv.resize(category, (img_rows, img_cols), cv.INTER_NEAREST)
+        image, category = random_crop(image, category)
+
+        image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         colorful_category = to_bgr(category)
         print('Start processing image: {}'.format(name))
 
-        image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
         x_test = np.empty((1, img_rows, img_cols, 3), dtype=np.float32)
         x_test[0, :, :, 0:3] = image
         x_test = preprocess_input(x_test)

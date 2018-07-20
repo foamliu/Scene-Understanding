@@ -31,16 +31,16 @@ if __name__ == '__main__':
     for i in range(len(samples)):
         id = samples[i]
         name = names[id]
-        image = get_image(name)
+        image_bgr = get_image(name)
         category = get_category(id)
-        image, category = random_crop(image, category)
+        image_bgr, category = random_crop(image_bgr, category)
 
-        image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+        image_rgb = cv.cvtColor(image_bgr, cv.COLOR_BGR2RGB)
         colorful_category = to_bgr(category)
         print('Start processing image: {}'.format(name))
 
         x_test = np.empty((1, img_rows, img_cols, 3), dtype=np.float32)
-        x_test[0, :, :, 0:3] = image
+        x_test[0, :, :, 0:3] = image_rgb
         x_test = preprocess_input(x_test)
 
         out = model.predict(x_test)
@@ -51,7 +51,7 @@ if __name__ == '__main__':
         if not os.path.exists('images'):
             os.makedirs('images')
 
-        cv.imwrite('images/{}_image.png'.format(i), image)
+        cv.imwrite('images/{}_image.png'.format(i), image_bgr)
         cv.imwrite('images/{}_out.png'.format(i), out)
         cv.imwrite('images/{}_gt.png'.format(i), colorful_category)
 
